@@ -6,6 +6,8 @@ var xlstojson = require("xls-to-json-lc");
 var xlsxtojson = require("xlsx-to-json-lc");
 var fs = require('fs'); // Add fs module
 var mongoose = require('mongoose'); // Add mongoose module
+const cors = require('cors');
+
 const { body, validationResult } = require('express-validator');
 
 // Connect to MongoDB
@@ -30,6 +32,12 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.use(bodyParser.json());  
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+
+//added localhost:5173 to the list of allowed origins
+app.use(cors({
+    origin: 'http://localhost:5173'
+}));
 
 
 // var storage = multer.diskStorage({ //multers disk storage settings
