@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import axios from "axios";
 function ExamForm() {
   const [examType, setExamType] = useState("");
   const [selectedSubjects, setSelectedSubjects] = useState("");
@@ -59,17 +59,14 @@ function ExamForm() {
     console.log("Form data:", formData);
 
     try {
-      // Send the POST request
-      const response = await fetch("http://localhost:3000", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      // Send the POST request using Axios
+      const response = await axios.post(
+        "http://localhost:3000/store",
+        formData
+      );
 
       // Check if the request was successful
-      if (response.ok) {
+      if (response.status === 200) {
         // Handle success response
         console.log("Form data successfully submitted:", formData);
       } else {
