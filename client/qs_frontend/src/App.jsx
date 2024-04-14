@@ -45,16 +45,41 @@ function ExamForm() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Your form submission logic here
-    console.log("Form submitted with data:", {
+
+    const formData = {
       examType,
       selectedSubjects,
       selectedModules,
       weightageMarks,
       considerPriority,
-    });
+    };
+    console.log("Form data:", formData);
+
+    try {
+      // Send the POST request
+      const response = await fetch("http://localhost:3000", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      // Check if the request was successful
+      if (response.ok) {
+        // Handle success response
+        console.log("Form data successfully submitted:", formData);
+      } else {
+        // Handle error response
+        console.error("Error submitting form data:", response.statusText);
+      }
+    } catch (error) {
+      // Handle network or other errors
+      console.error("Error submitting form data:", error.message);
+    }
   };
 
   return (
