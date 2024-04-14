@@ -60,7 +60,7 @@ function ExamForm() {
 
     try {
       // Send the POST request
-      const response = await fetch("http://localhost:3000", {
+      const response = await fetch("http://localhost:3000/store", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
