@@ -39,6 +39,10 @@ app.use(cors({
     origin: 'http://localhost:5173'
 }));
 
+var uploadsDir = './uploads';
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir);
+}
 
 // var storage = multer.diskStorage({ //multers disk storage settings
 //     destination: function (req, file, cb) {
