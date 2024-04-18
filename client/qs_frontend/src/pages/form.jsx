@@ -60,6 +60,7 @@ function ExamForm() {
     console.log("Form data:", formData);
 
     try {
+      //push to route /question
       // Send the POST request using Axios
       const response = await axios.post(
         "http://localhost:3000/store",
@@ -76,6 +77,7 @@ function ExamForm() {
       }
     } catch (error) {
       // Handle network or other errors
+      //push to route /question
       console.error("Error submitting form data:", error.message);
     }
   };
