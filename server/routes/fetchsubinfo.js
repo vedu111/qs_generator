@@ -5,6 +5,7 @@ const Subinfo = require('../models/subinfo');
 //http://localhost:3000/fetchSubinfo?sub=os&ise1=false&ise2=false&ese=true&bool=false
 router.get('/fetchSubinfo', async (req, res) => {
     try {
+      console.log(req.query);
       const { sub, ise1, ise2, ese, bool } = req.query;
       let chapterWeights = {};
   
