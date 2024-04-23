@@ -56,9 +56,9 @@ const UploadSheet = () => {
     }
   };
 
-  const handleUpload = () => {
-    navigate("/uploadImages");
-  };
+  // const handleUpload = () => {
+  //   navigate("/uploadImages");
+  // };
 
   const [error, setError] = useState(null);
   const [imagePreviews, setImagePreviews] = useState({});
@@ -79,6 +79,30 @@ const UploadSheet = () => {
       setData(response.data);
     } catch (error) {
       setError(error.message);
+    }
+  };
+
+  // Uplaoding images selected by the user
+  const handleUploadImages = async () => {
+    try {
+      const imageFiles = imageData
+        .filter((item) => item.image)
+        .map((item) => item.image);
+
+      const formData = new FormData();
+      imageFiles.forEach((file, index) => {
+        formData.append(`image${index}`, file);
+      });
+
+      const response = await axios.post(
+        "http://localhost:3000/storeImage",
+        formData
+      );
+      console.log(response.data);
+
+      // Handle the response or show a success message
+    } catch (error) {
+      console.error("Error uploading images:", error.message);
     }
   };
 
@@ -180,7 +204,7 @@ const UploadSheet = () => {
                           <img
                             src={imagePreviews[item.sr_no]}
                             alt={`Preview for question ${item.sr_no}`}
-                            className="w-48 h-fit object-cover"
+                            className="w-48 h-36 object-cover"
                           />
                         )}
                       </div>
@@ -190,6 +214,16 @@ const UploadSheet = () => {
               </tbody>
             </table>
           )}
+
+          <div className="flex justify-center mt-4">
+            <button
+              type="button"
+              onClick={handleUploadImages}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out"
+            >
+              Upload Images
+            </button>
+          </div>
         </div>
       )}
     </div>
