@@ -8,14 +8,15 @@ const subInfoRouter = require('./routes/subinfo');
 const fetchSubinfoRouter = require('./routes/fetchsubinfo');
 const storeQbRouter = require('./routes/storeqb');
 const questionsWithImagesRouter = require('./routes/questionswithimages');
-
+const cors = require('cors');
 const app = express();
 
 // MongoDB setup
-mongoose.connect('mongodb://localhost:27017/yourDB', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb+srv://dagadkhairvedant:Phw40Q017YOjZzwM@quesgenerator.k2g7m6f.mongodb.net/?retryWrites=true&w=majority&appName=QUESGENERATOR', { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Middleware for parsing JSON bodies
 app.use(express.json());
+app.use(cors());
 
 // Routes
 app.use('/', uploadRoute);

@@ -30,8 +30,8 @@ const Subinfo = require('../models/subinfo');
 //   }
 router.post('/subInfo', async (req, res) => {
   try {
+    console.log(req.body);
     const { sub, ise1, ise2, ese, ise1_TN, ise2_TN, ese_TN, weights } = req.body;
-
     const newSubinfo = new Subinfo({
       sub,
       ise1,
@@ -42,10 +42,12 @@ router.post('/subInfo', async (req, res) => {
       ese_TN,
       weights
     });
-
+    
     await newSubinfo.save();
 
-    res.status(201).json({ message: 'Subinfo saved successfully' });
+      res.status(201).json({ message: 'Subinfo saved successfully' });
+
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Failed to save subinfo' });
