@@ -5,6 +5,7 @@ import Question from "./pages/question";
 import Login from "./pages/login";
 import Teacherform from "./pages/teacherForm";
 import Uplaodsheet from "./pages/uploadSheet";
+import QuestionPaper from "./pages/questionPaper";
 function App() {
   return (
     <Router>
@@ -14,6 +15,7 @@ function App() {
         <Route path="/form" element={<Form />} />
         <Route path="/question" element={<Question />} />
         <Route path="/uploadSheet" element={<Uplaodsheet />} />
+        <Route path="/questionPaper" element={<QuestionPaper />} />
       </Routes>
     </Router>
   );
