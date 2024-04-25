@@ -11,6 +11,7 @@ const questionsWithImagesRouter = require('./routes/questionswithimages');
 const storeImagesRouter = require('./routes/storeimages');
 const { fetchQuestionsRouter} = require('./routes/fetchallqs');// Import');
 const quesgenRouter = require('./routes/questiongen');
+const storeImage = require('./routes/storeImage');
 const app = express();
 
 // MongoDB setup
