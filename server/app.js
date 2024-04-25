@@ -11,6 +11,7 @@ const questionsWithImagesRouter = require('./routes/questionswithimages');
 const storeImagesRouter = require('./routes/storeimages');
 const { fetchQuestionsRouter} = require('./routes/fetchallqs');// Import');
 const quesgenRouter = require('./routes/questiongen');
+const storeImage = require('./routes/storeImage');
 const app = express();
 
 // MongoDB setup
@@ -36,6 +37,7 @@ app.use('/', fetchQuestionsRoute); // Use the fetchquestions route
 app.use('/', subInfoRouter);
 app.use('/', fetchSubinfoRouter);
 app.use('/', storeQbRouter);
+app.use('/', storeImage);
 app.use('/', questionsWithImagesRouter);
 app.use('/', storeImagesRouter);
 app.use('/', fetchQuestionsRouter);
