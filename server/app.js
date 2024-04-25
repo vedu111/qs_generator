@@ -5,19 +5,30 @@ const fetchQuestionsRoute = require('./routes/fetchquestions'); // Import the fe
 const path = require('path');
 const { Question, questionsubSchema } = require('./models/question'); // Import questionsubSchema
 const subInfoRouter = require('./routes/subinfo');
-const fetchSubinfoRouter = require('./routes/fetchsubinfo');
+const {fetchSubinfoRouter} = require('./routes/fetchsubinfo');
 const storeQbRouter = require('./routes/storeqb');
 const questionsWithImagesRouter = require('./routes/questionswithimages');
-const storeImage = require('./routes/storeimages');
-const cors = require('cors');
+const storeImagesRouter = require('./routes/storeimages');
+const { fetchQuestionsRouter} = require('./routes/fetchallqs');// Import');
+const quesgenRouter = require('./routes/questiongen');
 const app = express();
 
 // MongoDB setup
 mongoose.connect('mongodb+srv://dagadkhairvedant:Phw40Q017YOjZzwM@quesgenerator.k2g7m6f.mongodb.net/?retryWrites=true&w=majority&appName=QUESGENERATOR', { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+
+db.on('error', (err) => {
+  console.error('Error connecting to database:', err);
+});
+
+db.once('open', () => {
+  console.log('Connected to MongoDB database');
+});
+
 
 // Middleware for parsing JSON bodies
 app.use(express.json());
-app.use(cors());
+app.set('view engine', 'ejs');
 
 // Routes
 app.use('/', uploadRoute);
@@ -27,6 +38,9 @@ app.use('/', fetchSubinfoRouter);
 app.use('/', storeQbRouter);
 app.use('/', storeImage);
 app.use('/', questionsWithImagesRouter);
+app.use('/', storeImagesRouter);
+app.use('/', fetchQuestionsRouter);
+app.use('/', quesgenRouter);
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
