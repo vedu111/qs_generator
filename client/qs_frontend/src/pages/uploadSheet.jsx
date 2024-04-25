@@ -7,7 +7,6 @@ const UploadSheet = () => {
   const [preview, setPreview] = useState(false);
   const handlePreviewButton = () => {
     setPreview(!preview);
-    fetchData(subject);
   };
 
   const [imageData, setImageData] = useState([]);
@@ -56,9 +55,9 @@ const UploadSheet = () => {
     }
   };
 
-  // const handleUpload = () => {
-  //   navigate("/uploadImages");
-  // };
+  const handleUpload = () => {
+    navigate("/uploadImages");
+  };
 
   const [error, setError] = useState(null);
   const [imagePreviews, setImagePreviews] = useState({});
@@ -70,41 +69,21 @@ const UploadSheet = () => {
     }));
   };
 
-  const fetchData = async (subject) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:3000/questionsWithImages?subject=${subject}`
-      );
-      console.log(response.data);
-      setData(response.data);
-    } catch (error) {
-      setError(error.message);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/questionsWithImages?subject=${subject}`
+        );
+        setData(response.data);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+    if (subject) {
+      fetchData();
     }
-  };
-
-  // Uplaoding images selected by the user
-  const handleUploadImages = async () => {
-    try {
-      const imageFiles = imageData
-        .filter((item) => item.image)
-        .map((item) => item.image);
-
-      const formData = new FormData();
-      imageFiles.forEach((file, index) => {
-        formData.append(`image${index}`, file);
-      });
-
-      const response = await axios.post(
-        "http://localhost:3000/storeImage",
-        formData
-      );
-      console.log(response.data);
-
-      // Handle the response or show a success message
-    } catch (error) {
-      console.error("Error uploading images:", error.message);
-    }
-  };
+  }, [subject]);
 
   return (
     <div className="flex-col">
@@ -157,6 +136,11 @@ const UploadSheet = () => {
             <button
               type="submit"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out"
+            >
+              Upload
+            </button>
+            <button
+              className="border ml-2 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out"
               onClick={handlePreviewButton}
             >
               Preview
@@ -204,7 +188,7 @@ const UploadSheet = () => {
                           <img
                             src={imagePreviews[item.sr_no]}
                             alt={`Preview for question ${item.sr_no}`}
-                            className="w-48 h-36 object-cover"
+                            className="w-48 h-fit object-cover"
                           />
                         )}
                       </div>
@@ -214,16 +198,6 @@ const UploadSheet = () => {
               </tbody>
             </table>
           )}
-
-          <div className="flex justify-center mt-4">
-            <button
-              type="button"
-              onClick={handleUploadImages}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out"
-            >
-              Upload Images
-            </button>
-          </div>
         </div>
       )}
     </div>

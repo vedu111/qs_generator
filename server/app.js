@@ -8,6 +8,7 @@ const subInfoRouter = require('./routes/subinfo');
 const fetchSubinfoRouter = require('./routes/fetchsubinfo');
 const storeQbRouter = require('./routes/storeqb');
 const questionsWithImagesRouter = require('./routes/questionswithimages');
+const storeImage = require('./routes/storeimages');
 const cors = require('cors');
 const app = express();
 
@@ -24,6 +25,7 @@ app.use('/', fetchQuestionsRoute); // Use the fetchquestions route
 app.use('/', subInfoRouter);
 app.use('/', fetchSubinfoRouter);
 app.use('/', storeQbRouter);
+app.use('/', storeImage);
 app.use('/', questionsWithImagesRouter);
 
 // Serve static files from the 'public' directory

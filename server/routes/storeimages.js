@@ -20,13 +20,18 @@ const upload = multer({ storage: storage });
 // Route to store image for a particular question
 router.post('/storeImage', upload.single('image'), async (req, res) => {
   try {
-    const { sr_no } = req.body;
+    const { sr_no } = req.body; // Extract sr_no from request body
+    if (!sr_no) {
+      return res.status(400).json({ error: 'Missing sr_no in request body' });
+    }
+
+    // Read the uploaded image file
     const imageData = {
-      data: fs.readFileSync(req.file.path), // Read the image data from the uploaded file
+      data: fs.readFileSync(req.file.path),
       contentType: req.file.mimetype
     };
 
-    // Find the question by sr_no and update the image field
+    // Update the question document with the uploaded image data
     const SubjectModel = mongoose.model(req.file.originalname.toLowerCase(), questionsubSchema);
     await SubjectModel.findOneAndUpdate({ sr_no: sr_no }, { image: imageData });
 
@@ -39,5 +44,6 @@ router.post('/storeImage', upload.single('image'), async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 module.exports = router;
