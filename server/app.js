@@ -7,6 +7,7 @@ const subInfoRouter = require('./routes/subinfo');
 const questionsWithImagesRouter = require('./routes/questionswithimages');
 const storeImagesRouter = require('./routes/storeimages');
 const quesgenRouter = require('./routes/questiongen');
+const cors = require('cors');
 const app = express();
 
 // MongoDB setup
@@ -21,6 +22,7 @@ db.once('open', () => {
   console.log('Connected to MongoDB database');
 });
 
+app.use(cors());
 
 // Middleware for parsing JSON bodies
 app.use(express.json());

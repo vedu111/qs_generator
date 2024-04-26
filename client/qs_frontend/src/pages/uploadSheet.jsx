@@ -85,14 +85,21 @@ const UploadSheet = () => {
   // Uplaoding images selected by the user
   const handleUploadImages = async () => {
     try {
-      const imageFiles = imageData
-        .filter((item) => item.image)
-        .map((item) => item.image);
+      // const imageFiles = imageData
+      //   .filter((item) => item.image)
+      //   .map((item) => item.image);
+      console.log(imagePreviews);
+      const imageFile = imagePreviews["15"]
+      console.log(imageFile);
 
       const formData = new FormData();
-      imageFiles.forEach((file, index) => {
-        formData.append(`image${index}`, file);
-      });
+      // formData.append("subject", subject);
+      formData.append("sr_no", 15);
+      formData.append("image", imageFile);
+      // imageFiles.forEach((file, index) => {
+      //   formData.append(`image${index}`, file);
+      // });
+      
 
       const response = await axios.post(
         "http://localhost:3000/storeImage",

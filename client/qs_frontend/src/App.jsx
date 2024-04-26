@@ -6,6 +6,8 @@ import Login from "./pages/login";
 import Teacherform from "./pages/teacherForm";
 import Uplaodsheet from "./pages/uploadSheet";
 import QuestionPaper from "./pages/questionPaper";
+import QuestionGenerator from "./pages/questionGenerator";
+import SubjectInfo from "./pages/subjectInfo";
 function App() {
   return (
     <Router>
@@ -16,6 +18,8 @@ function App() {
         <Route path="/question" element={<Question />} />
         <Route path="/uploadSheet" element={<Uplaodsheet />} />
         <Route path="/questionPaper" element={<QuestionPaper />} />
+        <Route path="/questionGenerator" element={<QuestionGenerator />} />
+        <Route path="/subjectInfo" element={<SubjectInfo />} />
       </Routes>
     </Router>
   );
