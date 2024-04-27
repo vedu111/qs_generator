@@ -10,20 +10,8 @@ const UploadSheet = () => {
     fetchData(subject);
   };
 
-  const [imageData, setImageData] = useState([]);
-  const handleImageUpload = (event, id) => {
-    const file = event.target.files[0];
-    const newData = imageData.map((item) =>
-      item.sr_no === id ? { ...item, image: URL.createObjectURL(file) } : item
-    );
-    setImageData(newData);
-  };
-
   const [data, setData] = useState([]);
-  const [upload, setUpload] = useState(false);
-  const handlePreview = () => {
-    setUpload(!upload);
-  };
+  const [uploaded, setUploaded] = useState(false);
 
   const [file, setFile] = useState(null);
   const [subject, setSubject] = useState("");
@@ -45,25 +33,28 @@ const UploadSheet = () => {
     formData.append("subject", subject);
 
     try {
-      // Send the POST request using Axios
-      const response = await axios.post(
+      await axios.post(
         "http://localhost:3000/upload",
         formData
       );
-      // Handle the response or show a success message
+      setUploaded(true);
+      alert("Uploaded successfully");
+      console.log("Excel sheet uploaded successfully");
     } catch (error) {
       console.error("Error submitting form data:", error.message);
     }
   };
 
-  // const handleUpload = () => {
-  //   navigate("/uploadImages");
-  // };
-
   const [error, setError] = useState(null);
   const [imagePreviews, setImagePreviews] = useState({});
 
   const handleUploadImage = (sr_no, file) => {
+    setData((prevData) => {
+      const newData = prevData.map((item) =>
+        item.sr_no === sr_no ? { ...item, image: file } : item
+      );
+      return newData;
+    });
     setImagePreviews((prevPreviews) => ({
       ...prevPreviews,
       [sr_no]: URL.createObjectURL(file),
@@ -82,32 +73,26 @@ const UploadSheet = () => {
     }
   };
 
-  // Uplaoding images selected by the user
   const handleUploadImages = async () => {
     try {
-      // const imageFiles = imageData
-      //   .filter((item) => item.image)
-      //   .map((item) => item.image);
-      console.log(imagePreviews);
-      const imageFile = imagePreviews["15"]
-      console.log(imageFile);
-
+      console.log(data);
       const formData = new FormData();
-      // formData.append("subject", subject);
-      formData.append("sr_no", 15);
-      formData.append("image", imageFile);
-      // imageFiles.forEach((file, index) => {
-      //   formData.append(`image${index}`, file);
-      // });
-      
+      formData.append("sub", subject);
+      const srNoArr = data.map((item) => item.sr_no);
+      const imagesArr = data.map((item) => item.image);
+      console.log(srNoArr, imagesArr);
+      for (let i = 0; i < srNoArr.length; i++) {
+        formData.append("sr_no", srNoArr[i]);
+        formData.append("images", imagesArr[i]);
 
-      const response = await axios.post(
-        "http://localhost:3000/storeImage",
-        formData
-      );
-      console.log(response.data);
-
-      // Handle the response or show a success message
+        await axios.post(
+          "http://localhost:3000/storeImage",
+          formData
+        );
+      }
+      alert("Images uploaded successfully");
+      console.log("Images uploaded successfully");
+      navigate("/questionGenerator");
     } catch (error) {
       console.error("Error uploading images:", error.message);
     }
@@ -119,10 +104,7 @@ const UploadSheet = () => {
         subject={subject}
         className="flex justify-center items-center h-[50vh] bg-gray-900"
       >
-        <form
-          onSubmit={handleSubmit}
-          className="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md"
-        >
+        <div className="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md">
           <div className="mb-5">
             <label
               htmlFor="selectedSubjects"
@@ -160,16 +142,24 @@ const UploadSheet = () => {
               className="w-full px-3 py-2 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="flex justify-center">
+          <div className="flex gap-2 justify-center">
             <button
-              type="submit"
+              disabled={uploaded}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out"
-              onClick={handlePreviewButton}
+              onClick={handleSubmit}
             >
-              Preview
+              Upload
             </button>
+            {uploaded && (
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out"
+                onClick={handlePreviewButton}
+              >
+                Preview
+              </button>
+            )}
           </div>
-        </form>
+        </div>
       </div>
       {preview && (
         <div className="container mx-auto p-6">
@@ -192,7 +182,7 @@ const UploadSheet = () => {
                       {item.questions}
                     </td>
                     <td className="p-2 border border-gray-400">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex sm:flex-row flex-col items-center space-x-2">
                         <label
                           htmlFor={`file-upload-${item.sr_no}`}
                           className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 cursor-pointer"

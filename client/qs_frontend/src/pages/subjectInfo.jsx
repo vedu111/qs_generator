@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function SubjectInfo() {
   const [subject, setSubject] = useState("");
@@ -24,6 +25,7 @@ function SubjectInfo() {
     5: "",
     6: "",
   });
+  const navigate = useNavigate();
 
   const handleSubjectChange = (e) => {
     setSubject(e.target.value);
@@ -90,6 +92,8 @@ function SubjectInfo() {
       });
       if (response.ok) {
         console.log("Data posted successfully");
+        navigate("/uploadSheet");
+
       } else {
         console.error("Failed to post data");
       }
@@ -99,7 +103,7 @@ function SubjectInfo() {
   };
 
   return (
-    <div className="flex justify-center items-center bg-gray-900">
+    <div className="my-6 flex justify-center items-center bg-gray-900">
       <form
         onSubmit={handleSubmit}
         className="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md"
