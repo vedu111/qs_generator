@@ -1,89 +1,56 @@
 const express = require('express');
+const {validationResult,matchedData } = require('express-validator');
 const router = express.Router();
 const Subinfo = require('../models/subinfo');
+const { validateSubinfo } = require('../middleware/validateSubInfo.js');
 
-// {
-//   "sub": "os",
-//   "ise1": [
-//     1,
-//     2,
-//     3
-//   ],
-//   "ise2": [
-//     4,
-//     5,
-//     6
-//   ],
-//   "ese": [
-//     1,
-//     2,
-//     3,
-//     4,
-//     5,
-//     6
-//   ],
-//   "ise1_TN": {
-//     "TH": 84,
-//     "N": 16
-//   },
-//   "ise2_TN": {
-//     "TH": 80,
-//     "N": 20
-//   },
-//   "ese_TN": {
-//     "TH": 70,
-//     "N": 30
-//   },
-//   "weights": {
-//     "1": 10,
-//     "2": 8,
-//     "3": 9,
-//     "4": 7,
-//     "5": 6,
-//     "6": 4
-//   },
-//   "eachchapNum": {
-//     "1": 10,
-//     "2": 50,
-//     "3": 20,
-//     "4": 30,
-//     "5": 60,
-//     "6": 10
-//   }
-// }
+router.post('/subInfo', validateSubinfo, async (req, res) => {
+ 
+    const errors = validationResult(req);
 
-router.post('/subInfo', async (req, res) => {
-  try {
-    const { sub, ise1, ise2, ese, ise1_TN, ise2_TN, ese_TN, weights, eachchapNum } = req.body;
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+  
+    const data = matchedData(req);
+    console.log(data);
 
-    // Check if a document with the same subject name already exists
-    const existingSubinfo = await Subinfo.findOne({ sub });
+    const newSubinfo = new Subinfo(data);
+    try {
+      const savedSubinfo = await newSubinfo.save();
+      return res.status(201).json(savedSubinfo);
+    } catch (err) {
+      console.error(err);
+      return res.status(400).send("Error saving data.");
+    }
+  
+  
 
-    if (existingSubinfo) {
-      res.status(400).json({ message: 'Subinfo already exists' });
-    } else {
-      // Create a new document if it doesn't exist
-      const newSubinfo = new Subinfo({
-        sub,
-        ise1,
-        ise2,
-        ese,
-        ise1_TN,
-        ise2_TN,
-        ese_TN,
-        weights,
-        eachchapNum
-      });
+    // const { sub, ise1, ise2, ese, ise1_TN, ise2_TN, ese_TN, weights, eachchapNum } = req.body;
 
-      await newSubinfo.save();
+    // const existingSubinfo = await Subinfo.findOne({ sub });
+
+    // if (existingSubinfo) {
+    //   res.status(400).json({ message: 'Subinfo already exists' });
+    // } else {
+
+    //   const newSubinfo = new Subinfo({
+    //     sub,
+    //     ise1,
+    //     ise2,
+    //     ese,
+    //     ise1_TN,
+    //     ise2_TN,
+    //     ese_TN,
+    //     weights,
+    //     eachchapNum
+    //   });
+
+    //   await newSubinfo.save();
 
       res.status(201).json({ message: 'Subinfo saved successfully' });
     }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to save subinfo' });
-  }
-});
+  );
 
 
 module.exports = router;
