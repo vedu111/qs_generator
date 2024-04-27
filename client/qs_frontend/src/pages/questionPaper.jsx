@@ -46,7 +46,7 @@ function questionPaper() {
   ];
 
   return (
-    <div className="bg-white p-8 w-fit mt-6 mx-auto">
+    <div className="bg-white p-8 w-fit my-6 mx-auto">
       <div className="w-[900px]">
         <div className="mb-4">
           <img src="/tcetHeader.jpg" alt="" />
