@@ -18,8 +18,9 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage }).single('file');
 
+
 router.post('/upload', function(req, res) {
-    upload(req, res, function(err) {
+    upload(req, res, async function(err) {
         if (err) {
             return res.status(500).json({ error: 'File upload failed', details: err.message });
         }
@@ -40,7 +41,7 @@ router.post('/upload', function(req, res) {
                 input: req.file.path,
                 output: null,
                 lowerCaseHeaders: true
-            }, function(err, result) {
+            }, async function(err, result) {
                 if (err) {
                     return res.status(500).json({ error: 'Error parsing Excel file', details: err.message });
                 }
@@ -52,29 +53,55 @@ router.post('/upload', function(req, res) {
                     return res.status(400).json({ error: 'Subject is required' });
                 }
 
-                // Create a model based on the schema
-                const Question = mongoose.model(subject.toLowerCase(), questionsubSchema);
-                
-                // Iterate over the questions and save them to the database
-                for (let i = 0; i < dataArray.length; i++) {
-                    const questionData = dataArray[i];
-                    questionData.subject = subject;
-                    const question = new Question(questionData);
-                    question.save().catch(err => {
-                        console.error("Error saving question: ", err);
-                    });
-                }
+                try {
+                    // Check if the exact requested collection name exists
+                    const collectionExists = await mongoose.connection.db.listCollections().toArray()
+                        .then(collections => collections.some(collection => collection.name === subject));
 
-                // Delete the file after parsing
-                fs.unlink(req.file.path, function(err) {
-                    if (err) {
-                        console.error("Error deleting file: ", err);
+                    if (!collectionExists) {
+                        // Check if the pluralized form of the collection name exists
+                        const pluralCollectionExists = await mongoose.connection.db.listCollections().toArray()
+                            .then(collections => collections.some(collection => collection.name === `${subject}s`));
+
+                        if (!pluralCollectionExists) {
+                            // Check if the pluralized form with an extra 's' exists
+                            const extraSPluralCollectionExists = await mongoose.connection.db.listCollections().toArray()
+                                .then(collections => collections.some(collection => collection.name === `${subject}es`));
+
+                            if (extraSPluralCollectionExists) {
+                                return res.status(400).json({ error: `Question Bank for ${subject} already exists` });
+                            }
+                        } else {
+                            return res.status(400).json({ error: `Question Bank for ${subject} already exists` });
+                        }
                     } else {
-                        console.log("File deleted successfully");
+                        return res.status(400).json({ error: `Question Bank for ${subject} already exists` });
                     }
-                });
 
-                res.status(200).json({ message: 'Data stored successfully' });
+                    // Create a model based on the schema
+                    const Question = mongoose.model(subject.toLowerCase(), questionsubSchema);
+                    
+                    // Iterate over the questions and save them to the database
+                    for (let i = 0; i < dataArray.length; i++) {
+                        const questionData = dataArray[i];
+                        questionData.subject = subject;
+                        const question = new Question(questionData);
+                        await question.save();
+                    }
+
+                    res.status(200).json({ message: 'Data stored successfully' });
+                } catch (error) {
+                    console.error("Error processing data or saving to database: ", error);
+                    res.status(500).json({ error: 'Error processing data or saving to database', details: error.message });
+                } finally {
+                    // Delete the file after parsing
+                    try {
+                        fs.unlinkSync(req.file.path);
+                        console.log("File deleted successfully");
+                    } catch (deleteErr) {
+                        console.error("Error deleting file: ", deleteErr);
+                    }
+                }
             });
         } catch (e) {
             res.status(500).json({ error: 'Error processing Excel file', details: e.message });
