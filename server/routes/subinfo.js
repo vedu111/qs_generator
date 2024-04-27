@@ -56,21 +56,29 @@ router.post('/subInfo', async (req, res) => {
   try {
     const { sub, ise1, ise2, ese, ise1_TN, ise2_TN, ese_TN, weights, eachchapNum } = req.body;
 
-    const newSubinfo = new Subinfo({
-      sub,
-      ise1,
-      ise2,
-      ese,
-      ise1_TN,
-      ise2_TN,
-      ese_TN,
-      weights,
-      eachchapNum
-    });
+    // Check if a document with the same subject name already exists
+    const existingSubinfo = await Subinfo.findOne({ sub });
 
-    await newSubinfo.save();
+    if (existingSubinfo) {
+      res.status(400).json({ message: 'Subinfo already exists' });
+    } else {
+      // Create a new document if it doesn't exist
+      const newSubinfo = new Subinfo({
+        sub,
+        ise1,
+        ise2,
+        ese,
+        ise1_TN,
+        ise2_TN,
+        ese_TN,
+        weights,
+        eachchapNum
+      });
 
-    res.status(201).json({ message: 'Subinfo saved successfully' });
+      await newSubinfo.save();
+
+      res.status(201).json({ message: 'Subinfo saved successfully' });
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Failed to save subinfo' });
