@@ -9,6 +9,8 @@ const storeImagesRouter = require('./routes/storeimages');
 const quesgenRouter = require('./routes/questiongen');
 const cors = require('cors');
 const app = express();
+const endpointLogger = require('./middleware/endpointLogger.js')
+
 
 // MongoDB setup
 mongoose.connect('mongodb://localhost:27017/qsGen', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -23,7 +25,7 @@ db.once('open', () => {
 });
 
 app.use(cors());
-
+app.use(endpointLogger)
 // Middleware for parsing JSON bodies
 app.use(express.json());
 app.set('view engine', 'ejs');
