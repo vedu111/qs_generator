@@ -1,98 +1,83 @@
 const mongoose = require('mongoose');
 
-// Define the schema
 const subinfoSchema = new mongoose.Schema({
   sub: {
     type: String,
     required: true,
-    unique: true // Ensure 'sub' is unique
+    unique: true,
   },
   ise1: {
-    type: [Number] // Expecting an array of numbers
+    type: [Number], 
+    required: true,
   },
   ise2: {
-    type: [Number] // Expecting an array of numbers
+    type: [Number], 
+    required: true,
   },
   ese: {
-    type: [Number] // Expecting an array of numbers
+    type: [Number], 
+    required: true,
   },
   ise1_TN: {
     TH: {
       type: Number,
       min: 0,
-      max: 100 // TH should be within 0-100
+      max: 100, 
+      required: true,
     },
     N: {
       type: Number,
-      default: function() {
-        return 100 - this.TH; // Automatically set N based on TH
-      }
-    }
+      default: function () {
+        return 100 - this.TH; 
+      },
+    },
   },
   ise2_TN: {
     TH: {
       type: Number,
       min: 0,
-      max: 100
+      max: 100,
+      required: true,
     },
     N: {
       type: Number,
-      default: function() {
-        return 100 - this.TH; // Automatically set N based on TH
-      }
-    }
+      default: function () {
+        return 100 - this.TH; 
+      },
+    },
   },
   ese_TN: {
     TH: {
       type: Number,
       min: 0,
-      max: 100
+      max: 100,
+      required: true,
     },
     N: {
       type: Number,
-      default: function() {
-        return 100 - this.TH; // Automatically set N based on TH
-      }
-    }
+      default: function () {
+        return 100 - this.TH; 
+      },
+    },
   },
   weights: {
-    type: [Number] // Expecting an array of numbers
+    '1': { type: Number, required: true },
+    '2': { type: Number, required: true },
+    '3': { type: Number, required: true },
+    '4': { type: Number, required: true },
+    '5': { type: Number, required: true },
+    '6': { type: Number, required: true },
   },
   eachchapNum: {
-    '1': {
-      type: Number,
-      min: 1,
-      max: 6 // Expected chapters 1-6
-    },
-    '2': {
-      type: Number,
-      min: 1,
-      max: 6
-    },
-    '3': {
-      type: Number,
-      min: 1,
-      max: 6
-    },
-    '4': {
-      type: Number,
-      min: 1,
-      max: 6
-    },
-    '5': {
-      type: Number,
-      min: 1,
-      max: 6
-    },
-    '6': {
-      type: Number,
-      min: 1,
-      max: 6
-    }
-  }
+    '1': { type: Number, required: true },
+    '2': { type: Number, required: true },
+    '3': { type: Number, required: true },
+    '4': { type: Number, required: true },
+    '5': { type: Number, required: true },
+    '6': { type: Number, required: true },
+  },
 });
 
-// Create and export the model
 const Subinfo = mongoose.model('Subinfo', subinfoSchema);
 
 module.exports = Subinfo;

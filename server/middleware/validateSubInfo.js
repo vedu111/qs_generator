@@ -1,5 +1,9 @@
 const { body, validationResult } = require('express-validator');
 
+const validateSumToValue = (target) => (obj) => {
+  const sum = Object.values(obj).reduce((total, num) => total + num, 0); 
+  return sum === target; 
+};
 const validateEachChapNum = (obj) => {
   const expectedKeys = ["1", "2", "3", "4", "5", "6"];
   const keys = Object.keys(obj);
@@ -41,13 +45,11 @@ const validateSubinfo = [
     .withMessage('ese must contain only numbers'),
 
   body('weights')
-    .isArray({ min: 6, max: 6 })
-    .withMessage('weights must contain exactly 6 elements')
-    .custom((arr) => {
-      const total = arr.reduce((acc, item) => acc + item, 0);
-      return total === 45;
-    })
-    .withMessage('weights must contain 6 numbers and sum to 45'),
+    .custom((value) => validateEachChapNum(value))
+    .withMessage('weights must contain keys 1-6 with all values as numbers')
+    .custom(validateSumToValue(45)) 
+    .withMessage('weights must sum to 45'),
+   
 
   body('ise1_TN.TH')
     .isFloat({ min: 0, max: 100 })
@@ -82,17 +84,10 @@ const validateSubinfo = [
     .custom(({ TH, N }) => validateSumTo100(TH, N))
     .withMessage('ese_TN TH + N must sum to 100'),
 
-  body('eachchapNum')
+    body('eachchapNum') 
     .custom((value) => validateEachChapNum(value))
-    .withMessage('eachchapNum must contain keys 1-6 with all values as numbers'),
+    .withMessage('eachChapterNum must contain keys 1-6 with all values as numbers'),
 
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    next();
-  },
 ];
 
 module.exports = { validateSubinfo };

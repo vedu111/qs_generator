@@ -5,15 +5,15 @@ const Subinfo = require('../models/subinfo');
 const { validateSubinfo } = require('../middleware/validateSubInfo.js');
 
 router.post('/subInfo', validateSubinfo, async (req, res) => {
- 
+    const data = matchedData(req);
+    console.log(data);
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
   
-    const data = matchedData(req);
-    console.log(data);
+   
 
     const newSubinfo = new Subinfo(data);
     try {
