@@ -4,7 +4,8 @@
   "description": "http://code.ciphertrick.com/2016/06/05/read-excel-files-convert-json-node-js/",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
