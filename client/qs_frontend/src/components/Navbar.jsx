@@ -79,10 +79,13 @@ export default function Navbar() {
           <a href="/">Home</a>
         </li>
         <li>
-          <a href="#">About</a>
+          <a href="/subjectInfo">SubInfo</a>
         </li>
         <li>
-          <a href="#">Contact</a>
+          <a href="/uploadSheet">Upload</a>
+        </li>
+        <li>
+          <a href="/questionGenerator">Generate</a>
         </li>
         <div className="flex flex-col gap-5 my-2">
           {!userIsSignedIn ? (
@@ -93,10 +96,13 @@ export default function Navbar() {
               </button>
             </a>
           ) : (
-            <button className="flex gap-2 items-center px-[21px] py-[14px] rounded-2xl bg-[#f14f3a] text-white hover:bg-white hover:text-black">
-              <span>Log Out</span>
-              <AiOutlineLogout width={20} height={20} />
-            </button>
+            <button
+            onClick={userLogout}
+            className="flex gap-2 items-center px-[21px] py-[14px] rounded-2xl bg-[#f14f3a] text-white hover:bg-white hover:text-black"
+          >
+            <span>Log Out</span>
+            <AiOutlineLogout width={20} height={20} />
+          </button>
           )}
         </div>
       </ul>

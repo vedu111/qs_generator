@@ -5,6 +5,7 @@ import ESEQuesPaper from "../components/ESEQuesPaper";
 import { auth } from "../lib/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 function questionGenerator() {
   const [subject, setSubject] = useState("");
@@ -19,6 +20,8 @@ function questionGenerator() {
   const [generated, setGenerated] = useState(false);
   const [quesPapersView, setQuesPapersView] = useState(false);
   const [quesPaper, setQuesPaper] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [loadingDisabled, setLoadingDisabled] = useState(false);
 
   const navigate = useNavigate();
   const auth = getAuth();
@@ -43,9 +46,10 @@ function questionGenerator() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await axios.get(
-      `http://localhost:3000/quesgen?sub=${subject}&ise1=${ise1}&ise2=${ise2}&ese=${ese}&bool=${bool}`
-    );
+    setLoading(true);
+    setLoadingDisabled(true);
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}quesgen?sub=${subject}&ise1=${ise1}&ise2=${ise2}&ese=${ese}&bool=${bool}`);
+    setLoading(false);
     console.log(response.data.result);
     setSet1(response.data.result.qp1);
     setSet2(response.data.result.qp2);
@@ -111,8 +115,11 @@ function questionGenerator() {
             </select>
           </div>
           <div className="flex justify-center">
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out">
-              Generate
+            <button disabled={loadingDisabled} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out flex gap-2 justify-center items-center">
+              <span>Generate</span>
+              {loading && (
+                <Loader2 className="w-6 h-6 text-white animate-spin" />
+              )}
             </button>
           </div>
         </form>

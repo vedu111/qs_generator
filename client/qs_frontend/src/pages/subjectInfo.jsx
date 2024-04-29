@@ -82,7 +82,7 @@ function SubjectInfo() {
     //     eachchapNum: eachchapNum,
     //   }))
     try {
-      const response = await fetch("http://localhost:3000/subInfo", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}subInfo`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

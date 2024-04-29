@@ -3,6 +3,7 @@ import axios from "axios";
 import { auth } from "../lib/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 const UploadSheet = () => {
   const navigate = useNavigate();
@@ -24,6 +25,11 @@ const UploadSheet = () => {
   const [file, setFile] = useState(null);
   const [subject, setSubject] = useState("");
 
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [uploadLoadingDisabled, setUploadLoadingDisabled] = useState(false);
+  const [uploadImagesLoading, setUploadImagesLoading] = useState(false);
+  const [uploadImagesLoadingDisabled, setUploadImagesLoadingDisabled] = useState(false);
+
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
@@ -34,6 +40,8 @@ const UploadSheet = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setUploadLoading(true);
+    setUploadLoadingDisabled(true);
     const formData = new FormData();
     if (file) {
       formData.append("file", file);
@@ -41,13 +49,11 @@ const UploadSheet = () => {
     formData.append("subject", subject);
 
     try {
-      await axios.post(
-        "http://localhost:3000/upload",
-        formData
-      );
-      setUploaded(true);
-      alert("Uploaded successfully");
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}upload`, formData);
+      setUploadLoading(false);
+      setUploaded(true)
       console.log("Excel sheet uploaded successfully");
+      alert("Uploaded successfully");
     } catch (error) {
       console.error("Error submitting form data:", error.message);
     }
@@ -72,7 +78,9 @@ const UploadSheet = () => {
   const fetchData = async (subject) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/questionsWithImages?subject=${subject}`
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }questionsWithImages?subject=${subject}`
       );
       console.log(response.data);
       setData(response.data);
@@ -82,6 +90,8 @@ const UploadSheet = () => {
   };
 
   const handleUploadImages = async () => {
+    setUploadImagesLoading(true);
+    setUploadImagesLoadingDisabled(true);
     try {
       console.log(data);
       const formData = new FormData();
@@ -94,12 +104,13 @@ const UploadSheet = () => {
         formData.append("images", imagesArr[i]);
 
         await axios.post(
-          "http://localhost:3000/storeImage",
+          `${import.meta.env.VITE_BACKEND_URL}storeImage`,
           formData
         );
       }
-      alert("Images uploaded successfully");
+      setUploadImagesLoading(false);
       console.log("Images uploaded successfully");
+      alert("Images uploaded successfully");
       navigate("/questionGenerator");
     } catch (error) {
       console.error("Error uploading images:", error.message);
@@ -152,11 +163,14 @@ const UploadSheet = () => {
           </div>
           <div className="flex gap-2 justify-center">
             <button
-              disabled={uploaded}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out"
+              disabled={uploadLoadingDisabled}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out flex gap-2 items-center justify-center"
               onClick={handleSubmit}
             >
-              Upload
+              <span>Upload</span>
+              {uploadLoading && (
+                <Loader2 className="w-6 h-6 text-white animate-spin" />
+              )}
             </button>
             {uploaded && (
               <button
@@ -222,11 +236,14 @@ const UploadSheet = () => {
 
           <div className="flex justify-center mt-4">
             <button
-              type="button"
+              disabled={uploadImagesLoadingDisabled}
               onClick={handleUploadImages}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out flex gap-2 items-center justify-center"
             >
-              Upload Images
+              <span>Upload Images</span>
+              {uploadImagesLoading && (
+                <Loader2 className="w-6 h-6 text-white animate-spin" />
+              )}
             </button>
           </div>
         </div>
