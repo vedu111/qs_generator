@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { auth } from "../lib/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 function SubjectInfo() {
   const [subject, setSubject] = useState("");
@@ -27,7 +28,9 @@ function SubjectInfo() {
     5: "",
     6: "",
   });
-  
+  const [loading, setLoading] = useState(false);
+  const [loadingDisabled, setLoadingDisabled] = useState(false);
+
   const navigate = useNavigate();
   const auth = getAuth();
   onAuthStateChanged(auth, (user) => {
@@ -70,6 +73,8 @@ function SubjectInfo() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setLoadingDisabled(true);
     // console.log(JSON.stringify({
     //     sub: subject,
     //     ise1: selectedISE1Chapters.sort(),
@@ -82,30 +87,30 @@ function SubjectInfo() {
     //     eachchapNum: eachchapNum,
     //   }))
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}subInfo`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          sub: subject,
-          ise1: selectedISE1Chapters,
-          ise2: selectedISE2Chapters,
-          ese: selectedESEChapters,
-          ise1_TN: ise1TN,
-          ise2_TN: ise2TN,
-          ese_TN: eseTN,
-          weights: weights,
-          eachchapNum: eachchapNum,
-        }),
-      });
-      if (response.ok) {
-        console.log("Data posted successfully");
-        navigate("/uploadSheet");
-
-      } else {
-        console.error("Failed to post data");
-      }
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}subInfo`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            sub: subject,
+            ise1: selectedISE1Chapters,
+            ise2: selectedISE2Chapters,
+            ese: selectedESEChapters,
+            ise1_TN: ise1TN,
+            ise2_TN: ise2TN,
+            ese_TN: eseTN,
+            weights: weights,
+            eachchapNum: eachchapNum,
+          }),
+        }
+      );
+      setLoading(false);
+      console.log("Data posted successfully");
+      alert("Data posted successfully");
+      navigate("/uploadSheet");
     } catch (error) {
       console.error("Failed to post data:", error);
     }
@@ -295,10 +300,11 @@ function SubjectInfo() {
         </div>
         <div className="flex justify-center">
           <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out"
+            disabled={loadingDisabled}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out flex gap-2 items-center justify-center"
           >
-            Submit
+            <span>Submit</span>
+            {loading && <Loader2 className="w-6 h-6 text-white animate-spin" />}
           </button>
         </div>
       </form>
