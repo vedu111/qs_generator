@@ -136,19 +136,19 @@ function questionGenerator() {
           <div>
           {exam === "ise1" || exam === "ise2" ? (
             quesPaper === 1 ? (
-              <ISEQuesPaper exam={exam} subject={subject} set={set1} />
+              <ISEQuesPaper setNum={quesPaper} exam={exam} subject={subject} set={set1} />
             ) : quesPaper === 2 ? (
-              <ISEQuesPaper exam={exam} subject={subject} set={set2} />
+              <ISEQuesPaper setNum={quesPaper} exam={exam} subject={subject} set={set2} />
             ) : (
-              <ISEQuesPaper exam={exam} subject={subject} set={set3} />
+              <ISEQuesPaper setNum={quesPaper} exam={exam} subject={subject} set={set3} />
             )
           ) : (
             quesPaper === 1 ? (
-              <ESEQuesPaper exam={exam} subject={subject} set={set1} />
+              <ESEQuesPaper setNum={quesPaper} exam={exam} subject={subject} set={set1} />
             ) : quesPaper === 2 ? (
-              <ESEQuesPaper exam={exam} subject={subject} set={set2} />
+              <ESEQuesPaper setNum={quesPaper} exam={exam} subject={subject} set={set2} />
             ) : (
-              <ESEQuesPaper exam={exam} subject={subject} set={set3} />
+              <ESEQuesPaper setNum={quesPaper} exam={exam} subject={subject} set={set3} />
             )
           )}
       </div>
