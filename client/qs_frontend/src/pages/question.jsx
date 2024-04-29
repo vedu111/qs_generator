@@ -2,6 +2,10 @@ import React from "react";
 import jsPDF from "jspdf";
 import html2pdf from "html2pdf.js";
 import { Link } from "react-router-dom";
+import { auth } from "../lib/firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+
 const UserQuestions = [
   {
     rating: "2",
@@ -237,6 +241,15 @@ const question = () => {
     };
     html2pdf().from(input).set(opt).save();
   };
+
+  const navigate = useNavigate();
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      navigate("/login");
+    }
+  });
+
   return (
     <div>
       <div className="flex gap-2">

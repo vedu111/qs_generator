@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { auth } from "../lib/firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 function SubjectInfo() {
@@ -25,7 +27,14 @@ function SubjectInfo() {
     5: "",
     6: "",
   });
+  
   const navigate = useNavigate();
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      navigate("/login");
+    }
+  });
 
   const handleSubjectChange = (e) => {
     setSubject(e.target.value);

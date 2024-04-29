@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { auth } from "../lib/firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 const UploadSheet = () => {
   const navigate = useNavigate();
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      navigate("/login");
+    }
+  });
   const [preview, setPreview] = useState(false);
   const handlePreviewButton = () => {
     setPreview(!preview);
@@ -110,7 +118,7 @@ const UploadSheet = () => {
               htmlFor="selectedSubjects"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Select Subjects
+              Select Subject
             </label>
             <select
               id="selectedSubjects"

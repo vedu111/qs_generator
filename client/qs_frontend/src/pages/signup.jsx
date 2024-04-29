@@ -2,28 +2,29 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import { auth } from "../lib/firebase";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import Navbar from "../components/Navbar";
 
-const login = () => {
+const signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  // const auth = getAuth();
+  //   const auth = getAuth();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // console.log(email, password);
-    // if (!email.includes("@tcetmumbai.in")) {
-    //   alert("Please enter a valid TCET email address");
-    // }
-    signInWithEmailAndPassword(auth, email, password)
+    if (!email.includes("@tcetmumbai.in")) {
+      alert("Please enter a valid TCET email address");
+      return;
+    }
+    createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
         // console.log(user);
-        alert("Logged in successfully");
+        alert("Account created successfully. You are now logged in.");
         navigate("/subjectInfo");
       })
       .catch((error) => {
@@ -42,7 +43,7 @@ const login = () => {
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                Sign in to your account
+                Create a new account
               </h1>
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                 <div>
@@ -111,16 +112,16 @@ const login = () => {
                 <button
                   className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm mt-4 bg-blue-600 px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 >
-                  Sign in
+                  Sign up
                 </button>
 
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                  Don’t have an account yet?{" "}
+                  Already have an account?{" "}
                   <a
-                    href="/signup"
+                    href="/login"
                     className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                   >
-                    Sign up
+                    Sign in
                   </a>
                 </p>
               </form>
@@ -134,4 +135,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default signup;

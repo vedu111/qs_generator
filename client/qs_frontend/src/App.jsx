@@ -10,11 +10,13 @@ import QuestionPaper from "./pages/questionPaper";
 import QuestionGenerator from "./pages/questionGenerator";
 import SubjectInfo from "./pages/subjectInfo";
 import Layout from "./components/Layout";
+import Signup from "./pages/signup";
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" index element={<Home />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/teacherForm" element={<Layout><Teacherform /></Layout>} />
         <Route path="/form" element={<Layout><Form /></Layout>} />
