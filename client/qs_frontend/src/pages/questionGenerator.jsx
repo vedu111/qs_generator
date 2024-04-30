@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import axios from "axios";
 import ISEQuesPaper from "../components/ISEQuesPaper";
 import ESEQuesPaper from "../components/ESEQuesPaper";
+import { auth } from "../lib/firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 function questionGenerator() {
   const [subject, setSubject] = useState("");
@@ -16,6 +20,16 @@ function questionGenerator() {
   const [generated, setGenerated] = useState(false);
   const [quesPapersView, setQuesPapersView] = useState(false);
   const [quesPaper, setQuesPaper] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [loadingDisabled, setLoadingDisabled] = useState(false);
+
+  const navigate = useNavigate();
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      navigate("/login");
+    }
+  });
 
   const handleSubjectChange = (e) => {
     setSubject(e.target.value);
@@ -32,9 +46,10 @@ function questionGenerator() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await axios.get(
-      `http://localhost:3000/quesgen?sub=${subject}&ise1=${ise1}&ise2=${ise2}&ese=${ese}&bool=${bool}`
-    );
+    setLoading(true);
+    setLoadingDisabled(true);
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}quesgen?sub=${subject}&ise1=${ise1}&ise2=${ise2}&ese=${ese}&bool=${bool}`);
+    setLoading(false);
     console.log(response.data.result);
     setSet1(response.data.result.qp1);
     setSet2(response.data.result.qp2);
@@ -100,8 +115,11 @@ function questionGenerator() {
             </select>
           </div>
           <div className="flex justify-center">
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out">
-              Generate
+            <button disabled={loadingDisabled} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out flex gap-2 justify-center items-center">
+              <span>Generate</span>
+              {loading && (
+                <Loader2 className="w-6 h-6 text-white animate-spin" />
+              )}
             </button>
           </div>
         </form>
@@ -119,41 +137,82 @@ function questionGenerator() {
         )}
         {quesPapersView && (
           <div className="flex gap-2 justify-center">
-            <button onClick={() => setQuesPaper(1)} className={`hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out ${quesPaper === 1 ? "bg-blue-700" : "bg-blue-500"}`}>
+            <button
+              onClick={() => setQuesPaper(1)}
+              className={`hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out ${
+                quesPaper === 1 ? "bg-blue-700" : "bg-blue-500"
+              }`}
+            >
               Question Paper 1
             </button>
-            <button onClick={() => setQuesPaper(2)}  className={`hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out ${quesPaper === 2 ? "bg-blue-700" : "bg-blue-500"}`}>
+            <button
+              onClick={() => setQuesPaper(2)}
+              className={`hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out ${
+                quesPaper === 2 ? "bg-blue-700" : "bg-blue-500"
+              }`}
+            >
               Question Paper 2
             </button>
-            <button onClick={() => setQuesPaper(3)}  className={`hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out ${quesPaper === 3 ? "bg-blue-700" : "bg-blue-500"}`}>
+            <button
+              onClick={() => setQuesPaper(3)}
+              className={`hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out ${
+                quesPaper === 3 ? "bg-blue-700" : "bg-blue-500"
+              }`}
+            >
               Question Paper 3
             </button>
           </div>
         )}
       </div>
-      {
-        quesPaper !== 0 && (
-          <div>
+      {quesPaper !== 0 && (
+        <div>
           {exam === "ise1" || exam === "ise2" ? (
             quesPaper === 1 ? (
-              <ISEQuesPaper exam={exam} subject={subject} set={set1} />
+              <ISEQuesPaper
+                setNum={quesPaper}
+                exam={exam}
+                subject={subject}
+                set={set1}
+              />
             ) : quesPaper === 2 ? (
-              <ISEQuesPaper exam={exam} subject={subject} set={set2} />
+              <ISEQuesPaper
+                setNum={quesPaper}
+                exam={exam}
+                subject={subject}
+                set={set2}
+              />
             ) : (
-              <ISEQuesPaper exam={exam} subject={subject} set={set3} />
+              <ISEQuesPaper
+                setNum={quesPaper}
+                exam={exam}
+                subject={subject}
+                set={set3}
+              />
             )
+          ) : quesPaper === 1 ? (
+            <ESEQuesPaper
+              setNum={quesPaper}
+              exam={exam}
+              subject={subject}
+              set={set1}
+            />
+          ) : quesPaper === 2 ? (
+            <ESEQuesPaper
+              setNum={quesPaper}
+              exam={exam}
+              subject={subject}
+              set={set2}
+            />
           ) : (
-            quesPaper === 1 ? (
-              <ESEQuesPaper exam={exam} subject={subject} set={set1} />
-            ) : quesPaper === 2 ? (
-              <ESEQuesPaper exam={exam} subject={subject} set={set2} />
-            ) : (
-              <ESEQuesPaper exam={exam} subject={subject} set={set3} />
-            )
+            <ESEQuesPaper
+              setNum={quesPaper}
+              exam={exam}
+              subject={subject}
+              set={set3}
+            />
           )}
-      </div>
-        )
-      }
+        </div>
+      )}
       {!quesPapersView && (
         <div>
           {set1.length > 0 && (

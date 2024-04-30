@@ -1,6 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
+import { auth } from "../lib/firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+
 function ExamForm() {
   const navigate = useNavigate();
   const [examType, setExamType] = useState("");
@@ -11,6 +14,13 @@ function ExamForm() {
   const [theoryPercentage, setTheoryPercentage] = useState(0);
 
   const handleInputChange = (e) => {
+    const navigate = useNavigate();
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate("/login");
+      }
+    });
     const { name, value, type, checked } = e.target;
 
     if (type === "checkbox") {

@@ -1,10 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { menu, close } from "../assets";
 import logomark from "../assets/logomark.svg";
-import { AiOutlineLogout } from "react-icons/ai";
+import { AiOutlineLogout, AiOutlineLogin } from "react-icons/ai";
+import { auth } from "../lib/firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const [toggle, setToggle] = useState(false);
+  const [userIsSignedIn, setUserIsSignedIn] = useState(false);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserIsSignedIn(true);
+      } else {
+        setUserIsSignedIn(false);
+      }
+    });
+  }, []);
+
+  const userLogout = () => {
+    auth.signOut();
+    navigate("/");
+  };
 
   const handleClick = () => setToggle(!toggle);
   return (
@@ -19,16 +39,27 @@ export default function Navbar() {
       </a>
       <div className="hidden lg:flex mr-16 gap-[3rem] text-base font-normal items-center">
         <a href="/">Home</a>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
+        <a href="/subjectInfo">SubInfo</a>
+        <a href="/uploadSheet">Upload</a>
+        <a href="/questionGenerator">Generate</a>
       </div>
       <div className="pr-5 hidden lg:flex gap-5 items-center">
-        <a href="/">
-          <button className="flex gap-2 items-center px-[21px] py-[14px] rounded-2xl bg-[#f14f3a] text-white hover:bg-white hover:text-black">
+        {!userIsSignedIn ? (
+          <a href="/login">
+            <button className="flex gap-2 items-center w-full px-[21px] py-[14px] rounded-2xl bg-blue-600 text-white hover:bg-white hover:text-black">
+              <span>Log In</span>
+              <AiOutlineLogin width={20} height={20} />
+            </button>
+          </a>
+        ) : (
+          <button
+            onClick={userLogout}
+            className="flex gap-2 items-center px-[21px] py-[14px] rounded-2xl bg-[#f14f3a] text-white hover:bg-white hover:text-black"
+          >
             <span>Log Out</span>
             <AiOutlineLogout width={20} height={20} />
           </button>
-        </a>
+        )}
       </div>
       <div className="lg:hidden z-40" onClick={handleClick}>
         <img
@@ -48,18 +79,31 @@ export default function Navbar() {
           <a href="/">Home</a>
         </li>
         <li>
-          <a href="#">About</a>
+          <a href="/subjectInfo">SubInfo</a>
         </li>
         <li>
-          <a href="#">Contact</a>
+          <a href="/uploadSheet">Upload</a>
+        </li>
+        <li>
+          <a href="/questionGenerator">Generate</a>
         </li>
         <div className="flex flex-col gap-5 my-2">
-          <a href="/">
-            <button className="flex gap-2 items-center w-full px-[21px] py-[14px] rounded-2xl bg-[#f14f3a] text-white hover:bg-white hover:text-black">
-                <span>Log Out</span>
-                <AiOutlineLogout width={20} height={20} />
-            </button>
-          </a>
+          {!userIsSignedIn ? (
+            <a href="/login">
+              <button className="flex gap-2 items-center w-full px-[21px] py-[14px] rounded-2xl bg-blue-600 text-white hover:bg-white hover:text-black">
+                <span>Log In</span>
+                <AiOutlineLogin width={20} height={20} />
+              </button>
+            </a>
+          ) : (
+            <button
+            onClick={userLogout}
+            className="flex gap-2 items-center px-[21px] py-[14px] rounded-2xl bg-[#f14f3a] text-white hover:bg-white hover:text-black"
+          >
+            <span>Log Out</span>
+            <AiOutlineLogout width={20} height={20} />
+          </button>
+          )}
         </div>
       </ul>
     </div>

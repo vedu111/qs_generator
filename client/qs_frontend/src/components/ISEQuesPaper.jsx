@@ -1,4 +1,33 @@
-function ISEQuesPaper({ exam, subject, set }) {
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import { useRef } from "react";
+
+function ISEQuesPaper({ setNum, exam, subject, set }) {
+  const pdfRef = useRef();
+  const downloadPdf = () => {
+    const input = pdfRef.current;
+    if (!input) {
+      console.error("Something went wrong. Please try again.");
+      return;
+    }
+    html2canvas(input).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = (pdfHeight - imgHeight * ratio) / 2;
+      pdf.addImage(imgData, "PNG", imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+      // const imgProps = pdf.getImageProperties(imgData);
+      // const pdfWidth = pdf.internal.pageSize.getWidth();
+      // const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      // pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`iseQuesPaper${setNum}.pdf`);
+    });
+  }
   const td = {
     border: "1.8px solid black",
     width: "fit-content",
@@ -29,37 +58,38 @@ function ISEQuesPaper({ exam, subject, set }) {
   ];
 
   return (
-    <div className="bg-white p-8 w-fit my-6 mx-auto">
-      <div className="w-[900px]">
-        <div className="mb-4">
-          <img src="/tcetHeader.jpg" alt="" />
-        </div>
-        {/* <div className="text-center"> */}
-        <div className="flex flex-col gap-1">
-          <h1 className="text-center font-bold text-[18px]">
-            {exam === "ise1"
-              ? "IN-SEMESTER EXAMINATION-1"
-              : "IN-SEMESTER EXAMINATION-2"}
-          </h1>
-          <h1 className="text-center font-bold text-[18px]">
-            SE (Semester-III)
-          </h1>
-          <h1 className="text-center font-bold text-[18px]">
-            SUBJECT - {subject}
-          </h1>
-          {/* </div> */}
-          <div className="flex justify-between">
-            <p>Branch:</p>
-            <p>Date:</p>
+    <div className="flex flex-col my-6">
+      <div className="bg-white p-8 w-fit mx-auto" ref={pdfRef}>
+        <div className="w-[800px]">
+          <div className="mb-4">
+            <img src="/tcetHeader.jpg" alt="" />
           </div>
-          <div className="flex justify-between">
-            <p>Div:</p>
-            <p>Timing:</p>
-          </div>
-          <div className="flex justify-between">
-            <p>Duration: 60 minutes</p>
-            <p>Maximum marks: 20</p>
-          </div>
+          {/* <div className="text-center"> */}
+          <div className="flex flex-col gap-1">
+            <h1 className="text-center font-bold text-[18px]">
+              {exam === "ise1"
+                ? "IN-SEMESTER EXAMINATION-1"
+                : "IN-SEMESTER EXAMINATION-2"}
+            </h1>
+            <h1 className="text-center font-bold text-[18px]">
+              SE (Semester-III)
+            </h1>
+            <h1 className="text-center font-bold text-[18px]">
+              SUBJECT - {subject}
+            </h1>
+            {/* </div> */}
+            <div className="flex justify-between">
+              <p>Branch:</p>
+              <p>Date:</p>
+            </div>
+            <div className="flex justify-between">
+              <p>Div:</p>
+              <p>Timing:</p>
+            </div>
+            <div className="flex justify-between">
+              <p>Duration: 60 minutes</p>
+              <p>Maximum marks: 20</p>
+            </div>
             <p className="font-bold">Instructions:</p>
             <ol className="font-bold ml-20">
               <li>1. All sections are compulsory</li>
@@ -73,34 +103,43 @@ function ISEQuesPaper({ exam, subject, set }) {
               </li>
               <li>5. Figures to the right indicate full marks.</li>
             </ol>
-        </div>
+          </div>
 
-        <table className="mt-2 border-[1.8px] border-black w-full">
-          <tbody>
-            <tr className="text-center font-bold">
-              <td style={td}>Q.1</td>
-              <td style={td}>{" "}</td>
-              <td style={td}>Answer any 5 of the following questions</td>
-              <td style={td}>Marks</td>
-              <td style={td}>CO</td>
-              <td style={td}>RBT Level</td>
-              <td style={td}>PI</td>
-            </tr>
-            {set.map((arr, i) =>
-              arr.map((item, index) => (
-                <tr key={index} className="text-center">
-                  <td style={td}></td>
-                  <td style={td}></td>
-                  <td className="text-left" style={td}>{item.questions}</td>
-                  <td style={td}>{item.marks}</td>
-                  <td style={td}>{item.co}</td>
-                  <td style={td}>{item.rbt}</td>
-                  <td style={td}>{item.pi}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+          <table className="mt-2 border-[1.8px] border-black w-full">
+            <tbody>
+              <tr className="text-center font-bold">
+                <td style={td}>Q.1</td>
+                <td style={td}> </td>
+                <td style={td}>Answer any 5 of the following questions</td>
+                <td style={td}>Marks</td>
+                <td style={td}>CO</td>
+                <td style={td}>RBT Level</td>
+                <td style={td}>PI</td>
+              </tr>
+              {set.map((arr, i) =>
+                arr.map((item, index) => (
+                  <tr key={index} className="text-center">
+                    <td style={td}></td>
+                    <td style={td}></td>
+                    <td className="text-left" style={td}>
+                      {item.questions}
+                    </td>
+                    <td style={td}>{item.marks}</td>
+                    <td style={td}>{item.co}</td>
+                    <td style={td}>{item.rbt}</td>
+                    <td style={td}>{item.pi}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div
+        className="button text-white mx-auto bg-blue-800 w-fit rounded-md p-2 cursor-pointer m-2"
+        onClick={downloadPdf}
+      >
+        Download PDF
       </div>
     </div>
   );
