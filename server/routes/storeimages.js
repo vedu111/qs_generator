@@ -27,36 +27,53 @@ const upload = multer({ storage: storage }).fields([
   { name: 'images' },
 ]);
 
+let subjectFolder;
+
 // Route to store images for multiple questions
 router.post('/storeImage', upload, async (req, res) => {
   try {
     const { sub, sr_no } = req.body;
     const images = req.files.images || [];
-    const SubjectModel = mongoose.model(sub.toLowerCase(), questionsubSchema);
+    subjectFolder = `uploads/${sub.toLowerCase()}`;
 
-    const uniqueSrNos = Object.values(sr_no).filter((value, index, self) => self.indexOf(value) === index);
+    const SubjectModel = mongoose.model(sub.toLowerCase(), questionsubSchema);
+    const uniqueSrNos = Object.values(sr_no).filter(
+      (value, index, self) => self.indexOf(value) === index
+    );
 
     for (let i = 0; i < uniqueSrNos.length; i++) {
       const currentSrNo = uniqueSrNos[i];
       const imageIndex = Object.values(sr_no).indexOf(currentSrNo);
+
       if (images[imageIndex]) {
         const imageFile = images[imageIndex];
-        const imageData = {
-          data: fs.readFileSync(imageFile.path),
-          contentType: imageFile.mimetype,
-        };
+        const filePath = imageFile.path;
 
-        await SubjectModel.findOneAndUpdate(
-          { sr_no: currentSrNo },
-          { $push: { images: imageData } },
-          { upsert: true, new: true }
-        );
+        if (fs.existsSync(filePath)) {
+          const imageData = {
+            data: fs.readFileSync(filePath),
+            contentType: imageFile.mimetype,
+          };
 
-        fs.unlinkSync(imageFile.path);
+          await SubjectModel.findOneAndUpdate(
+            { sr_no: currentSrNo },
+            { $push: { images: imageData } },
+            { upsert: true, new: true }
+          );
+
+          fs.unlinkSync(filePath);
+        } else {
+          console.error(`File not found: ${filePath}`);
+        }
       }
     }
 
-    const subjectFolder = `uploads/${sub.toLowerCase()}`;
+    res.status(201).json({ message: 'Images stored successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  } finally {
+    // Delete the uploads directory after processing all files
     if (fs.existsSync(subjectFolder)) {
       fs.rmdir(subjectFolder, { recursive: true }, (err) => {
         if (err) {
@@ -66,11 +83,6 @@ router.post('/storeImage', upload, async (req, res) => {
         }
       });
     }
-
-    res.status(201).json({ message: 'Images stored successfully' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
