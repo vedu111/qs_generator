@@ -225,8 +225,7 @@ function questionGenerator() {
                   </tr>
                 </thead>
                 <tbody>
-                  {set1.map((arr, i) =>
-                    arr.map((item, i) => (
+                  {set1.map((item, i) =>
                       <tr key={i} className="bg-white">
                         <td className="p-2 border border-gray-400">
                           {item.sr_no}
@@ -235,10 +234,8 @@ function questionGenerator() {
                           {item.questions}
                         </td>
                       </tr>
-                    ))
                   )}
-                  {set2.map((arr, i) =>
-                    arr.map((item, i) => (
+                  {set2.map((item, i) =>
                       <tr key={i} className="bg-white">
                         <td className="p-2 border border-gray-400">
                           {item.sr_no}
@@ -247,10 +244,8 @@ function questionGenerator() {
                           {item.questions}
                         </td>
                       </tr>
-                    ))
                   )}
-                  {set3.map((arr, i) =>
-                    arr.map((item, i) => (
+                  {set3.map((item, i) =>
                       <tr key={i} className="bg-white">
                         <td className="p-2 border border-gray-400">
                           {item.sr_no}
@@ -259,7 +254,6 @@ function questionGenerator() {
                           {item.questions}
                         </td>
                       </tr>
-                    ))
                   )}
                 </tbody>
               </table>

@@ -1,6 +1,7 @@
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useRef } from "react";
+import {Buffer} from 'buffer';
 
 function ISEQuesPaper({ setNum, exam, subject, set }) {
   const pdfRef = useRef();
@@ -116,20 +117,25 @@ function ISEQuesPaper({ setNum, exam, subject, set }) {
                 <td style={td}>RBT Level</td>
                 <td style={td}>PI</td>
               </tr>
-              {set.map((arr, i) =>
-                arr.map((item, index) => (
+              {set.map((item, index) =>
                   <tr key={index} className="text-center">
                     <td style={td}></td>
                     <td style={td}></td>
-                    <td className="text-left" style={td}>
-                      {item.questions}
-                    </td>
+                    {item.is_image === "y" ? (
+                      <td className="text-left" style={td}>
+                        <img className="w-40" src={`data:image/*;base64,${Buffer.from(item.images[0].data, 'binary').toString('base64')}`} alt="" />
+                        {item.questions}
+                      </td>
+                    ) : (
+                      <td className="text-left" style={td}>
+                        {item.questions}
+                      </td>
+                    )}
                     <td style={td}>{item.marks}</td>
                     <td style={td}>{item.co}</td>
                     <td style={td}>{item.rbt}</td>
                     <td style={td}>{item.pi}</td>
                   </tr>
-                ))
               )}
             </tbody>
           </table>

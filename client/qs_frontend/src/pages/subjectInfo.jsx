@@ -8,7 +8,7 @@ function SubjectInfo() {
   const [subject, setSubject] = useState("");
   const [selectedISE1Chapters, setSelectedISE1Chapters] = useState([]);
   const [selectedISE2Chapters, setSelectedISE2Chapters] = useState([]);
-  const [selectedESEChapters, setSelectedESEChapters] = useState([]);
+  const selectedESEChapters = [1, 2, 3, 4, 5, 6]
   const [ise1TN, setISE1TN] = useState({ TH: "", N: "" });
   const [ise2TN, setISE2TN] = useState({ TH: "", N: "" });
   const [eseTN, setESETN] = useState({ TH: "", N: "" });
@@ -54,13 +54,6 @@ function SubjectInfo() {
         break;
       case "ISE2":
         setSelectedISE2Chapters((prevChapters) =>
-          prevChapters.includes(chapterNumber)
-            ? prevChapters.filter((chap) => chap !== chapterNumber)
-            : [...prevChapters, chapterNumber]
-        );
-        break;
-      case "ESE":
-        setSelectedESEChapters((prevChapters) =>
           prevChapters.includes(chapterNumber)
             ? prevChapters.filter((chap) => chap !== chapterNumber)
             : [...prevChapters, chapterNumber]
@@ -181,24 +174,6 @@ function SubjectInfo() {
           </div>
         </div>
         <div className="mb-4 text-white">
-          <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Select ESE Chapters
-          </span>
-          <div className="grid grid-cols-3">
-            {[...Array(6)].map((_, i) => (
-              <div className="flex gap-2" key={i}>
-                <input
-                  type="checkbox"
-                  name={`ese_${i + 1}`}
-                  id={`ese_${i + 1}`}
-                  onChange={() => handleChapterSelection(i + 1, "ESE")}
-                />
-                <label htmlFor={`ese_${i + 1}`}>Chapter {i + 1}</label>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="mb-4 text-white">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
             ISE-1 TN
           </label>
@@ -265,7 +240,7 @@ function SubjectInfo() {
 
         <div className="mb-4 text-white">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Weights
+            Hours per Chapter (Weights)
           </label>
           {[1, 2, 3, 4, 5, 6].map((index) => (
             <input
@@ -283,7 +258,7 @@ function SubjectInfo() {
 
         <div className="mb-4 text-white">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Each Chapter Number
+            Each Chapter Numeric Ratio
           </label>
           {[1, 2, 3, 4, 5, 6].map((index) => (
             <input
