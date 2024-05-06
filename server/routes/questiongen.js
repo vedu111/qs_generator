@@ -282,9 +282,9 @@ for (let i = 1; i <= 3; i++) {
 
         
 // itterate over each set:
-qp1 = Final_Validation(qp1)
-qp2 = Final_Validation(qp2)
-qp3 = Final_Validation(qp3)
+qp1 = await Final_Validation(qp1);
+qp2 = await Final_Validation(qp2);
+qp3 = await Final_Validation(qp3);
 
 console.log('qp1:', qp1);
 console.log('qp2:', qp2);
