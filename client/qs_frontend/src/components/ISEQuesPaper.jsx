@@ -1,9 +1,20 @@
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useRef } from "react";
-import {Buffer} from 'buffer';
+import { Buffer } from "buffer";
 
 function ISEQuesPaper({ setNum, exam, subject, set }) {
+  const handleQuestionAlphabet = (i) => {
+    let start;
+    if (i === 7 || i === 8) {
+      start = 97 + i - 7;
+    } else if (i === 9 || i === 10) {
+      start = 97 + i - 9;
+    } else {
+      start = 97 + i;
+    }
+    return String.fromCharCode(start) + ".";
+  };
   const pdfRef = useRef();
   const downloadPdf = () => {
     const input = pdfRef.current;
@@ -21,14 +32,21 @@ function ISEQuesPaper({ setNum, exam, subject, set }) {
       const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
       const imgX = (pdfWidth - imgWidth * ratio) / 2;
       const imgY = (pdfHeight - imgHeight * ratio) / 2;
-      pdf.addImage(imgData, "PNG", imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+      pdf.addImage(
+        imgData,
+        "PNG",
+        imgX,
+        imgY,
+        imgWidth * ratio,
+        imgHeight * ratio
+      );
       // const imgProps = pdf.getImageProperties(imgData);
       // const pdfWidth = pdf.internal.pageSize.getWidth();
       // const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
       // pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
       pdf.save(`iseQuesPaper${setNum}.pdf`);
     });
-  }
+  };
   const td = {
     border: "1.8px solid black",
     width: "fit-content",
@@ -117,13 +135,46 @@ function ISEQuesPaper({ setNum, exam, subject, set }) {
                 <td style={td}>RBT Level</td>
                 <td style={td}>PI</td>
               </tr>
-              {set.map((item, index) =>
+              {set.map((item, index) => (
+                <>
+                  {index === 8 ? (
+                    <tr>
+                      <td style={td}></td>
+                      <td style={td}></td>
+                      <td style={td} className="text-center font-bold">OR</td>
+                      <td style={td}></td>
+                      <td style={td}></td>
+                      <td style={td}></td>
+                      <td style={td}></td>
+                    </tr>
+                  ) : index === 10 ? (
+                    <tr>
+                      <td style={td}></td>
+                      <td style={td}></td>
+                      <td style={td} className="text-center font-bold">OR</td>
+                      <td style={td}></td>
+                      <td style={td}></td>
+                      <td style={td}></td>
+                      <td style={td}></td>
+                    </tr>
+                  ) : (
+                    ""
+                  )}
                   <tr key={index} className="text-center">
-                    <td style={td}></td>
-                    <td style={td}></td>
+                    <td style={td}>
+                      {index === 7 ? "Q.2." : index === 9 ? "Q.3." : ""}
+                    </td>
+                    <td style={td}>{handleQuestionAlphabet(index)}</td>
                     {item.is_image === "y" ? (
                       <td className="text-left" style={td}>
-                        <img className="w-40" src={`data:image/*;base64,${Buffer.from(item.images[0].data, 'binary').toString('base64')}`} alt="" />
+                        <img
+                          className="w-40 mx-auto"
+                          src={`data:image/*;base64,${Buffer.from(
+                            item.images[0].data,
+                            "binary"
+                          ).toString("base64")}`}
+                          alt=""
+                        />
                         {item.questions}
                       </td>
                     ) : (
@@ -136,7 +187,8 @@ function ISEQuesPaper({ setNum, exam, subject, set }) {
                     <td style={td}>{item.rbt}</td>
                     <td style={td}>{item.pi}</td>
                   </tr>
-              )}
+                </>
+              ))}
             </tbody>
           </table>
         </div>
