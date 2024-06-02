@@ -167,15 +167,15 @@ function ISEQuesPaper({ setNum, exam, subject, set }) {
                     <td style={td}>{handleQuestionAlphabet(index)}</td>
                     {item.is_image === "y" ? (
                       <td className="text-left" style={td}>
+                        {item.questions}
                         <img
-                          className="w-40 mx-auto"
+                          className="w-[400px] h-fit mx-auto mt-2"
                           src={`data:image/*;base64,${Buffer.from(
                             item.images[0].data,
                             "binary"
                           ).toString("base64")}`}
                           alt=""
                         />
-                        {item.questions}
                       </td>
                     ) : (
                       <td className="text-left" style={td}>
