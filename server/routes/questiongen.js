@@ -238,20 +238,20 @@ if (nqBN % 2 === 0) { // Use nqBN for Section B
 console.log(dictBN); 
 
 // // Generate question papers and store them in arrays
-for (let i = 1; i <= 3; i++) {
-    const { set1, set2, set3 } = await generateQuestionPaper(sub, i, 2, parseInt(dictAT[i]), "T", true); //module marks count 
-    qp1.push(set1);
-    
-    qp2.push(set2);
-    
-    qp3.push(set3);
-    
-  }
+for (let key in dictAT) {
+  const { set1, set2, set3 } = await generateQuestionPaper(sub, key, 2, parseInt(dictAT[key]), "T", true);
+  qp1.push(set1);
+
+  qp2.push(set2);
   
-  for (let i = 1; i <= 3; i++) {
-    const { set1, set2, set3 } = await generateQuestionPaper(sub,i, 2, parseInt(dictAN[i]), "N", true); //module marks count 
+  qp3.push(set3);
+}
+
+  
+  for (let key in dictAN) {
+    const { set1, set2, set3 } = await generateQuestionPaper(sub,key, 2, parseInt(dictAN[key]), "N", true); 
     qp1.push(set1);
-    
+
     qp2.push(set2);
     
     qp3.push(set3);
@@ -259,10 +259,10 @@ for (let i = 1; i <= 3; i++) {
   }
   
   // Generate question papers and store them in arrays
-  for (let i = 1; i <= 3; i++) {
-    const { set1, set2, set3 } = await generateQuestionPaper(sub,i, 5, parseInt(dictBT[i]), "T", true); //module marks count 
+  for (let key in dictBT) {
+    const { set1, set2, set3 } = await generateQuestionPaper(sub,key, 5, parseInt(dictBT[key]), "T", true); 
     qp1.push(set1);
-    
+
     qp2.push(set2);
     
     qp3.push(set3);
@@ -270,8 +270,8 @@ for (let i = 1; i <= 3; i++) {
   }
   
   // // Generate question papers and store them in arrays
-  for (let i = 1; i <= 3; i++) {
-    const { set1, set2, set3 } = await generateQuestionPaper(sub,i, 5, parseInt(dictBN[i]), "N", true); //module marks count 
+  for (let key in dictBN) {
+    const { set1, set2, set3 } = await generateQuestionPaper(sub,key, 5, parseInt(dictBN[key]), "N", true);
     qp1.push(set1);
     
     qp2.push(set2);
