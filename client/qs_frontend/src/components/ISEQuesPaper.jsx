@@ -165,7 +165,7 @@ function ISEQuesPaper({ setNum, exam, subject, set }) {
                       {index === 7 ? "Q.2." : index === 9 ? "Q.3." : ""}
                     </td>
                     <td style={td}>{handleQuestionAlphabet(index)}</td>
-                    {item.is_image === "y" ? (
+                    {item.images.length > 0 ? ( // item.is_image === "y"
                       <td className="text-left" style={td}>
                         {item.questions}
                         <img

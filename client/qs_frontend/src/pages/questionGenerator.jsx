@@ -36,6 +36,9 @@ function questionGenerator() {
   };
   const handleExamChange = (e) => {
     setExam(e.target.value);
+    setIse1(false);
+    setIse2(false);
+    setEse(false);
     if (e.target.value === "ise1") {
       setIse1(true);
     } else if (e.target.value === "ise2") {
@@ -55,6 +58,7 @@ function questionGenerator() {
     setSet2(response.data.result.qp2);
     setSet3(response.data.result.qp3);
     setGenerated(true);
+    setLoadingDisabled(false);
     console.log("Set1:", response.data.result.qp1);
     console.log("Set2:", response.data.result.qp2);
     console.log("Set3:", response.data.result.qp3);
@@ -215,7 +219,7 @@ function questionGenerator() {
       )}
       {!quesPapersView && (
         <div>
-          {set1.length > 0 && (
+          {set1.length > 0 && set2.length > 0 && set3.length > 0 && (
             <div className="mx-auto p-6">
               <table className="w-full border-collapse border border-gray-400">
                 <thead>

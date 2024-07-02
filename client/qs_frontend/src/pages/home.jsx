@@ -42,7 +42,7 @@ const home = () => {
             className="flex flex-row gap-4 py-1 pl-4 md:py-4"
           >
             <button className="py-2.5 px-5 rounded-lg bg-white border border-[#D0D5DD]">
-              <a href="/signup">
+              <a href="/login">
                 <div className="flex gap-3">
                   <div className="zoom-in">
                     <figure className="pt-1">
