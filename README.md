@@ -1,1 +1,1 @@
-# qs_generator
+# QS_generator
