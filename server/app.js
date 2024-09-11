@@ -2,17 +2,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 const uploadRoute = require('./routes/upload');
 const path = require('path');
-const { Question, questionsubSchema } = require('./models/question'); // Import questionsubSchema
+const { Question, questionsubSchema } = require('./models/question'); 
 const subInfoRouter = require('./routes/subinfo');
 const questionsWithImagesRouter = require('./routes/questionswithimages');
 const storeImagesRouter = require('./routes/storeimages');
 const quesgenRouter = require('./routes/questiongen');
+const flushRoute = require('./routes/flush');
+const listCollectionsRoute = require('./routes/listCollections');
 const cors = require('cors');
 const app = express();
 
 require('dotenv').config();
 
-// MongoDB setup
 mongoose.connect(process.env.MONGO_DB_URI, { useNewUrlParser: true, useUnifiedTopology: true }); // 'mongodb://localhost:27017/qsGen'
 const db = mongoose.connection;
 
@@ -26,18 +27,17 @@ db.once('open', () => {
 
 app.use(cors());
 
-// Middleware for parsing JSON bodies
 app.use(express.json());
 app.set('view engine', 'ejs');
 
-// Routes
 app.use('/', uploadRoute);
 app.use('/', subInfoRouter);
 app.use('/', questionsWithImagesRouter);
 app.use('/', storeImagesRouter);
 app.use('/', quesgenRouter);
+app.use('/', flushRoute);
+app.use('/', listCollectionsRoute);
 
-// Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen(3000, () => {
