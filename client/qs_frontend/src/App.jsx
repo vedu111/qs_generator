@@ -11,6 +11,7 @@ import QuestionGenerator from "./pages/questionGenerator";
 import SubjectInfo from "./pages/subjectInfo";
 import Layout from "./components/Layout";
 // import Signup from "./pages/signup";
+import Flush from "./pages/flush";
 function App() {
   return (
     <Router>
@@ -25,6 +26,7 @@ function App() {
         <Route path="/questionPaper" element={<Layout><QuestionPaper /></Layout>} />
         <Route path="/questionGenerator" element={<Layout><QuestionGenerator /></Layout>} />
         <Route path="/subjectInfo" element={<Layout><SubjectInfo /></Layout>} />
+        <Route path="/flush" element={<Layout><Flush /></Layout>} />
       </Routes>
     </Router>
   );

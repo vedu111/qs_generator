@@ -60,6 +60,9 @@ export default function Navbar() {
         <a href="/subjectInfo">SubInfo</a>
         <a href="/uploadSheet">Upload</a>
         <a href="/questionGenerator">Generate</a>
+        {(user?.email === "1032220215@tcetmumbai.in" || user?.email === "loukik.salvi@tcetmumbai.in") && (
+          <a href="/flush">Flush</a>
+        )}
       </div>
       <div className="pr-5 hidden lg:flex gap-5 items-center">
         {!userIsSignedIn ? (
@@ -151,6 +154,11 @@ export default function Navbar() {
         <li>
           <a href="/questionGenerator">Generate</a>
         </li>
+        {(user?.email === "1032220215@tcetmumbai.in" || user?.email === "loukik.salvi@tcetmumbai.in") && (
+          <li>
+            <a href="/flush">Flush</a>
+          </li>
+        )}
         <div className="flex flex-col items-center gap-5 my-2">
           {!userIsSignedIn ? (
             <a href="/login">
@@ -194,9 +202,9 @@ export default function Navbar() {
                       </li>
                       <li>
                         <div className="block capitalize px-4 py-3 hover:bg-white hover:text-black whitespace-nowrap">
-                          {user?.email === "1032220215@tcetmumbai.in"
-                            ? "Admin"
-                            : "User"}
+                          {(user?.email === "1032220215@tcetmumbai.in" || user?.email === "loukik.salvi@tcetmumbai.in")
+                            ? "Admin" 
+                            : user?.email === "sheetal.rathi@tcetmumbai.in" ? "Dean Academic" : "User"}
                         </div>
                       </li>
                     </ul>

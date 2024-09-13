@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { auth } from "../lib/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,7 @@ function SubjectInfo() {
   const [subject, setSubject] = useState("");
   const [selectedISE1Chapters, setSelectedISE1Chapters] = useState([]);
   const [selectedISE2Chapters, setSelectedISE2Chapters] = useState([]);
-  const selectedESEChapters = [1, 2, 3, 4, 5, 6]
+  const selectedESEChapters = [1, 2, 3, 4, 5, 6];
   const [ise1TN, setISE1TN] = useState({ TH: "", N: "" });
   const [ise2TN, setISE2TN] = useState({ TH: "", N: "" });
   const [eseTN, setESETN] = useState({ TH: "", N: "" });
@@ -30,6 +30,49 @@ function SubjectInfo() {
   });
   const [loading, setLoading] = useState(false);
   const [loadingDisabled, setLoadingDisabled] = useState(false);
+  const [subjectsInDB, setSubjectsInDB] = useState([]);
+  const [subjectNames, setSubjectNames] = useState([
+    "OS",
+    "DAA",
+    "DBMS",
+    "Maths",
+  ]);
+
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}collections`
+      );
+      const data = await response.json();
+      const subjects = data.collections.filter(
+        (collection) => collection !== "questions" && collection !== "subinfos"
+      );
+      setSubjectsInDB(
+        subjects.map((subject) => {
+          if (subject === "daas") {
+            return "DAA";
+          } else if (subject === "os") {
+            return "OS";
+          } else if (subject === "dbms") {
+            return "DBMS";
+          } else if (subject === "maths") {
+            return "Maths";
+          }
+        })
+      );
+    };
+    fetchSubjects();
+  }, []);
+
+  useEffect(() => {
+    subjectsInDB.forEach((subject) => {
+      if (subjectNames.includes(subject)) {
+        setSubjectNames((prevNames) =>
+          prevNames.filter((name) => name !== subject)
+        );
+      }
+    });
+  }, [subjectsInDB]);
 
   const navigate = useNavigate();
   const auth = getAuth();
@@ -131,10 +174,16 @@ function SubjectInfo() {
             required
           >
             <option value="">Select Subject</option>
-            <option value="DAA">DAA</option>
-            <option value="OS">OS</option>
-            <option value="DBMS">DBMS</option>
-            <option value="Maths">Maths</option>
+            {subjectNames.map((subject) => (
+              <option value={subject} key={subject}>
+                {subject}
+              </option>
+            ))}
+            {subjectsInDB.map((subject) => (
+              <option disabled={true} value={subject} key={subject}>
+                {subject}
+              </option>
+            ))}
           </select>
         </div>
         <div className="mb-4 text-white">

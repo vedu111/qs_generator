@@ -28,7 +28,52 @@ const UploadSheet = () => {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [uploadLoadingDisabled, setUploadLoadingDisabled] = useState(false);
   const [uploadImagesLoading, setUploadImagesLoading] = useState(false);
-  const [uploadImagesLoadingDisabled, setUploadImagesLoadingDisabled] = useState(false);
+  const [uploadImagesLoadingDisabled, setUploadImagesLoadingDisabled] =
+    useState(false);
+
+  const [subjectsInDB, setSubjectsInDB] = useState([]);
+  const [subjectNames, setSubjectNames] = useState([
+    "OS",
+    "DAA",
+    "DBMS",
+    "Maths",
+  ]);
+
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}collections`
+      );
+      const data = await response.json();
+      const subjects = data.collections.filter(
+        (collection) => collection !== "questions" && collection !== "subinfos"
+      );
+      setSubjectsInDB(
+        subjects.map((subject) => {
+          if (subject === "daas") {
+            return "DAA";
+          } else if (subject === "os") {
+            return "OS";
+          } else if (subject === "dbms") {
+            return "DBMS";
+          } else if (subject === "maths") {
+            return "Maths";
+          }
+        })
+      );
+    };
+    fetchSubjects();
+  }, []);
+
+  useEffect(() => {
+    subjectsInDB.forEach((subject) => {
+      if (subjectNames.includes(subject)) {
+        setSubjectNames((prevNames) =>
+          prevNames.filter((name) => name !== subject)
+        );
+      }
+    });
+  }, [subjectsInDB]);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -51,7 +96,7 @@ const UploadSheet = () => {
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_URL}upload`, formData);
       setUploadLoading(false);
-      setUploaded(true)
+      setUploaded(true);
       console.log("Excel sheet uploaded successfully");
       alert("Uploaded successfully");
     } catch (error) {
@@ -140,10 +185,16 @@ const UploadSheet = () => {
               required
             >
               <option value="">Select Subject</option>
-              <option value="DAA">DAA</option>
-              <option value="OS">OS</option>
-              <option value="DBMS">DBMS</option>
-              <option value="Maths">Maths</option>
+              {subjectNames.map((subject) => (
+                <option value={subject} key={subject}>
+                  {subject}
+                </option>
+              ))}
+              {subjectsInDB.map((subject) => (
+                <option disabled={true} value={subject} key={subject}>
+                  {subject}
+                </option>
+              ))}
             </select>
           </div>
           <div className="mb-4">
