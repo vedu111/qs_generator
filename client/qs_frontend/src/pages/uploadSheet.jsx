@@ -33,10 +33,18 @@ const UploadSheet = () => {
 
   const [subjectsInDB, setSubjectsInDB] = useState([]);
   const [subjectNames, setSubjectNames] = useState([
-    "OS",
-    "DAA",
-    "DBMS",
-    "Maths",
+    "Computer Networks (CN)",
+    "Operating System (OS)",
+    "Design and Analysis of Algorithms (DAA)",
+    "Digital Logic Design and Computer Architecture (DLD & COA)",
+    "Computer Graphics (CG)",
+    "Microprocessor (MP)",
+    "Data Base & Management System (DBMS)",
+    "Theory of Computation (TOC)",
+    "Introduction to Intelligent System (IIS)",
+    "Compiler Design (CD)",
+    "Maths-3 (M3)",
+    "Maths-4 (M4)",
   ]);
 
   useEffect(() => {
@@ -50,14 +58,30 @@ const UploadSheet = () => {
       );
       setSubjectsInDB(
         subjects.map((subject) => {
-          if (subject === "daas") {
-            return "DAA";
-          } else if (subject === "os") {
-            return "OS";
-          } else if (subject === "dbms") {
-            return "DBMS";
-          } else if (subject === "maths") {
-            return "Maths";
+          if (subject === "cn" || subject === "cns") {
+            return "Computer Networks (CN)";
+          } else if (subject === "os" || subject === "oss") {
+            return "Operating System (OS)";
+          } else if (subject === "daa" || subject === "daas") {
+            return "Design and Analysis of Algorithms (DAA)";
+          } else if (subject === "dldcoa" || subject === "dldcoas") {
+            return "Digital Logic Design and Computer Architecture (DLD & COA)";
+          } else if (subject === "cg" || subject === "cgs") {
+            return "Computer Graphics (CG)";
+          } else if (subject === "mp" || subject === "mps") {
+            return "Microprocessor (MP)";
+          } else if (subject === "dbms" || subject === "dbmss") {
+            return "Data Base & Management System (DBMS)";
+          } else if (subject === "toc" || subject === "tocs") {
+            return "Theory of Computation (TOC)";
+          } else if (subject === "iis" || subject === "iiss") {
+            return "Introduction to Intelligent System (IIS)";
+          } else if (subject === "cd" || subject === "cds") {
+            return "Compiler Design (CD)";
+          } else if (subject === "m3" || subject === "m3s") {
+            return "Maths-3 (M3)";
+          } else if (subject === "m4" || subject === "m4s") {
+            return "Maths-4 (M4)";
           }
         })
       );
@@ -185,16 +209,33 @@ const UploadSheet = () => {
               required
             >
               <option value="">Select Subject</option>
-              {subjectNames.map((subject) => (
-                <option value={subject} key={subject}>
-                  {subject}
-                </option>
-              ))}
-              {subjectsInDB.map((subject) => (
-                <option disabled={true} value={subject} key={subject}>
-                  {subject}
-                </option>
-              ))}
+              {subjectNames.map(
+                (subject) =>
+                  subject && (
+                    <option
+                      value={subject
+                        .match(/\(([^)]+)\)/)[1]
+                        .replace(/[ &]/g, "")}
+                      key={subject}
+                    >
+                      {subject}
+                    </option>
+                  )
+              )}
+              {subjectsInDB.map(
+                (subject) =>
+                  subject && (
+                    <option
+                      disabled={true}
+                      value={subject
+                        .match(/\(([^)]+)\)/)[1]
+                        .replace(/[ &]/g, "")}
+                      key={subject}
+                    >
+                      {subject}
+                    </option>
+                  )
+              )}
             </select>
           </div>
           <div className="mb-4">

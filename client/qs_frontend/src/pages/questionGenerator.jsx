@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ISEQuesPaper from "../components/ISEQuesPaper";
 import ESEQuesPaper from "../components/ESEQuesPaper";
@@ -22,6 +22,73 @@ function questionGenerator() {
   const [quesPaper, setQuesPaper] = useState(0);
   const [loading, setLoading] = useState(false);
   const [loadingDisabled, setLoadingDisabled] = useState(false);
+  const [subjectsInDB, setSubjectsInDB] = useState([]);
+  const [subjectNames, setSubjectNames] = useState([
+    "Computer Networks (CN)",
+    "Operating System (OS)",
+    "Design and Analysis of Algorithms (DAA)",
+    "Digital Logic Design and Computer Architecture (DLD & COA)",
+    "Computer Graphics (CG)",
+    "Microprocessor (MP)",
+    "Data Base & Management System (DBMS)",
+    "Theory of Computation (TOC)",
+    "Introduction to Intelligent System (IIS)",
+    "Compiler Design (CD)",
+    "Maths-3 (M3)",
+    "Maths-4 (M4)",
+  ]);
+
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}collections`
+      );
+      const data = await response.json();
+      const subjects = data.collections.filter(
+        (collection) => collection !== "questions" && collection !== "subinfos"
+      );
+      setSubjectsInDB(
+        subjects.map((subject) => {
+          if (subject === "cn" || subject === "cns") {
+            return "Computer Networks (CN)";
+          } else if (subject === "os" || subject === "oss") {
+            return "Operating System (OS)";
+          } else if (subject === "daa" || subject === "daas") {
+            return "Design and Analysis of Algorithms (DAA)";
+          } else if (subject === "dldcoa" || subject === "dldcoas") {
+            return "Digital Logic Design and Computer Architecture (DLD & COA)";
+          } else if (subject === "cg" || subject === "cgs") {
+            return "Computer Graphics (CG)";
+          } else if (subject === "mp" || subject === "mps") {
+            return "Microprocessor (MP)";
+          } else if (subject === "dbms" || subject === "dbmss") {
+            return "Data Base & Management System (DBMS)";
+          } else if (subject === "toc" || subject === "tocs") {
+            return "Theory of Computation (TOC)";
+          } else if (subject === "iis" || subject === "iiss") {
+            return "Introduction to Intelligent System (IIS)";
+          } else if (subject === "cd" || subject === "cds") {
+            return "Compiler Design (CD)";
+          } else if (subject === "m3" || subject === "m3s") {
+            return "Maths-3 (M3)";
+          } else if (subject === "m4" || subject === "m4s") {
+            return "Maths-4 (M4)";
+          }
+        })
+      );
+    };
+    fetchSubjects();
+  }, []);
+
+  useEffect(() => {
+    subjectsInDB.forEach((subject) => {
+      if (subjectNames.includes(subject)) {
+        setSubjectNames((prevNames) =>
+          prevNames.filter((name) => name !== subject)
+        );
+      }
+    });
+  }, [subjectsInDB]);
 
   const navigate = useNavigate();
   const auth = getAuth();
@@ -51,7 +118,11 @@ function questionGenerator() {
     e.preventDefault();
     setLoading(true);
     setLoadingDisabled(true);
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}quesgen?sub=${subject}&ise1=${ise1}&ise2=${ise2}&ese=${ese}&bool=${bool}`);
+    const response = await axios.get(
+      `${
+        import.meta.env.VITE_BACKEND_URL
+      }quesgen?sub=${subject}&ise1=${ise1}&ise2=${ise2}&ese=${ese}&bool=${bool}`
+    );
     setLoading(false);
     console.log(response.data.result);
     setSet1(response.data.result.qp1);
@@ -91,10 +162,33 @@ function questionGenerator() {
               required
             >
               <option value="">Select Subject</option>
-              <option value="DAA">DAA</option>
-              <option value="OS">OS</option>
-              <option value="DBMS">DBMS</option>
-              <option value="Maths">Maths</option>
+              {subjectsInDB.map(
+                (subject) =>
+                  subject && (
+                    <option
+                      value={subject
+                        .match(/\(([^)]+)\)/)[1]
+                        .replace(/[ &]/g, "")}
+                      key={subject}
+                    >
+                      {subject}
+                    </option>
+                  )
+              )}
+              {subjectNames.map(
+                (subject) =>
+                  subject && (
+                    <option
+                      disabled={true}
+                      value={subject
+                        .match(/\(([^)]+)\)/)[1]
+                        .replace(/[ &]/g, "")}
+                      key={subject}
+                    >
+                      {subject}
+                    </option>
+                  )
+              )}
             </select>
           </div>
           <div className="mb-4">
@@ -119,7 +213,10 @@ function questionGenerator() {
             </select>
           </div>
           <div className="flex justify-center">
-            <button disabled={loadingDisabled} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out flex gap-2 justify-center items-center">
+            <button
+              disabled={loadingDisabled}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300 ease-in-out flex gap-2 justify-center items-center"
+            >
               <span>Generate</span>
               {loading && (
                 <Loader2 className="w-6 h-6 text-white animate-spin" />
@@ -229,36 +326,36 @@ function questionGenerator() {
                   </tr>
                 </thead>
                 <tbody>
-                  {set1.map((item, i) =>
-                      <tr key={i} className="bg-white">
-                        <td className="p-2 border border-gray-400">
-                          {item.sr_no}
-                        </td>
-                        <td className="p-2 border border-gray-400">
-                          {item.questions}
-                        </td>
-                      </tr>
-                  )}
-                  {set2.map((item, i) =>
-                      <tr key={i} className="bg-white">
-                        <td className="p-2 border border-gray-400">
-                          {item.sr_no}
-                        </td>
-                        <td className="p-2 border border-gray-400">
-                          {item.questions}
-                        </td>
-                      </tr>
-                  )}
-                  {set3.map((item, i) =>
-                      <tr key={i} className="bg-white">
-                        <td className="p-2 border border-gray-400">
-                          {item.sr_no}
-                        </td>
-                        <td className="p-2 border border-gray-400">
-                          {item.questions}
-                        </td>
-                      </tr>
-                  )}
+                  {set1.map((item, i) => (
+                    <tr key={i} className="bg-white">
+                      <td className="p-2 border border-gray-400">
+                        {item.sr_no}
+                      </td>
+                      <td className="p-2 border border-gray-400">
+                        {item.questions}
+                      </td>
+                    </tr>
+                  ))}
+                  {set2.map((item, i) => (
+                    <tr key={i} className="bg-white">
+                      <td className="p-2 border border-gray-400">
+                        {item.sr_no}
+                      </td>
+                      <td className="p-2 border border-gray-400">
+                        {item.questions}
+                      </td>
+                    </tr>
+                  ))}
+                  {set3.map((item, i) => (
+                    <tr key={i} className="bg-white">
+                      <td className="p-2 border border-gray-400">
+                        {item.sr_no}
+                      </td>
+                      <td className="p-2 border border-gray-400">
+                        {item.questions}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
