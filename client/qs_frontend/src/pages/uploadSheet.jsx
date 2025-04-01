@@ -8,11 +8,11 @@ import { Loader2 } from "lucide-react";
 const UploadSheet = () => {
   const navigate = useNavigate();
   const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      navigate("/login");
-    }
-  });
+  // onAuthStateChanged(auth, (user) => {
+  //   if (!user) {
+  //     navigate("/login");
+  //   }
+  // });
   const [preview, setPreview] = useState(false);
   const handlePreviewButton = () => {
     setPreview(!preview);

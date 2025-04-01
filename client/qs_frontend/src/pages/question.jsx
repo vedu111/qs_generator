@@ -244,11 +244,11 @@ const question = () => {
 
   const navigate = useNavigate();
   const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      navigate("/login");
-    }
-  });
+  // onAuthStateChanged(auth, (user) => {
+  //   if (!user) {
+  //     navigate("/login");
+  //   }
+  // });
 
   return (
     <div>

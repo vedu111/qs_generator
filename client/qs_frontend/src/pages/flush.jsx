@@ -9,20 +9,20 @@ export default function flush() {
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
   const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      setUser(null);
-      navigate("/login");
-    } else {
-      setUser(user);
-    }
-  });
-  if (
-    user?.email !== "1032220215@tcetmumbai.in" &&
-    user?.email !== "loukik.salvi@tcetmumbai.in"
-  ) {
-    navigate("/");
-  }
+  // onAuthStateChanged(auth, (user) => {
+  //   if (!user) {
+  //     setUser(null);
+  //     navigate("/login");
+  //   } else {
+  //     setUser(user);
+  //   }
+  // });
+  // if (
+  //   user?.email !== "1032220215@tcetmumbai.in" &&
+  //   user?.email !== "loukik.salvi@tcetmumbai.in"
+  // ) {
+  //   navigate("/");
+  // }
   const flushDB = async () => {
     setLoading(true);
     // alert("Are you sure you want to flush the database?");

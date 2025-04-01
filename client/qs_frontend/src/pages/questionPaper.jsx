@@ -6,11 +6,11 @@ import { useNavigate } from "react-router-dom";
 function questionPaper() {
   const navigate = useNavigate();
   const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      navigate("/login");
-    }
-  });
+  // onAuthStateChanged(auth, (user) => {
+  //   if (!user) {
+  //     navigate("/login");
+  //   }
+  // });
   const td = {
     border: "1.8px solid black",
     width: "40px",

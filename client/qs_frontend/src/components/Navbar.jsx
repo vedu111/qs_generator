@@ -60,12 +60,12 @@ export default function Navbar() {
         <a href="/subjectInfo">SubInfo</a>
         <a href="/uploadSheet">Upload</a>
         <a href="/questionGenerator">Generate</a>
-        {(user?.email === "1032220215@tcetmumbai.in" || user?.email === "loukik.salvi@tcetmumbai.in") && (
-          <a href="/flush">Flush</a>
-        )}
+        {/* {(user?.email === "1032220215@tcetmumbai.in" || user?.email === "loukik.salvi@tcetmumbai.in") && ( */}
+        <a href="/flush">Flush</a>
+        {/* )} */}
       </div>
       <div className="pr-5 hidden lg:flex gap-5 items-center">
-        {!userIsSignedIn ? (
+        {/* {!userIsSignedIn ? (
           <a href="/login">
             <button className="flex gap-2 items-center w-full px-[21px] py-[14px] rounded-2xl bg-blue-600 text-white hover:bg-white hover:text-black">
               <span>Log In</span>
@@ -113,20 +113,19 @@ export default function Navbar() {
                       </div>
                     </li>
                   </ul>
-                  {/* <button
-                    type="button"
-                    onClick={userLogout}
-                    className="w-full block px-4 py-3 text-sm text-white hover:text-black hover:bg-white rounded-b-md whitespace-nowrap"
-                  >
-                    Sign out
-                  </button> */}
                 </div>
               ) : (
                 ""
               )}
             </div>
           </>
-        )}
+        )} */}
+        <a href="/subjectInfo">
+          <button className="flex gap-2 items-center w-full px-[21px] py-[14px] rounded-2xl bg-blue-600 text-white hover:bg-white hover:text-black">
+            <span>Get Started</span>
+            <AiOutlineLogin width={20} height={20} />
+          </button>
+        </a>
       </div>
       <div className="lg:hidden z-40" onClick={handleClick}>
         <img
@@ -154,13 +153,14 @@ export default function Navbar() {
         <li>
           <a href="/questionGenerator">Generate</a>
         </li>
-        {(user?.email === "1032220215@tcetmumbai.in" || user?.email === "loukik.salvi@tcetmumbai.in") && (
-          <li>
-            <a href="/flush">Flush</a>
-          </li>
-        )}
+        {/* {(user?.email === "1032220215@tcetmumbai.in" ||
+          user?.email === "loukik.salvi@tcetmumbai.in") && ( */}
+        <li>
+          <a href="/flush">Flush</a>
+        </li>
+        {/* )} */}
         <div className="flex flex-col items-center gap-5 my-2">
-          {!userIsSignedIn ? (
+          {/* {!userIsSignedIn ? (
             <a href="/login">
               <button className="flex gap-2 items-center w-full px-[21px] py-[14px] rounded-2xl bg-blue-600 text-white hover:bg-white hover:text-black">
                 <span>Log In</span>
@@ -178,12 +178,7 @@ export default function Navbar() {
               </button>
               <div className="relative">
                 <button onClick={() => setDropdown(!dropdown)}>
-                  <img
-                    src="/avatar.png"
-                    height={50}
-                    width={50}
-                    alt="Avatar"
-                  />
+                  <img src="/avatar.png" height={50} width={50} alt="Avatar" />
                 </button>
                 {dropdown ? (
                   <div
@@ -202,26 +197,28 @@ export default function Navbar() {
                       </li>
                       <li>
                         <div className="block capitalize px-4 py-3 hover:bg-white hover:text-black whitespace-nowrap">
-                          {(user?.email === "1032220215@tcetmumbai.in" || user?.email === "loukik.salvi@tcetmumbai.in")
-                            ? "Admin" 
-                            : user?.email === "sheetal.rathi@tcetmumbai.in" ? "Dean Academic" : "User"}
+                          {user?.email === "1032220215@tcetmumbai.in" ||
+                          user?.email === "loukik.salvi@tcetmumbai.in"
+                            ? "Admin"
+                            : user?.email === "sheetal.rathi@tcetmumbai.in"
+                            ? "Dean Academic"
+                            : "User"}
                         </div>
                       </li>
                     </ul>
-                    {/* <button
-                      type="button"
-                      onClick={userLogout}
-                      className="w-full block px-4 py-3 text-sm text-white hover:text-black hover:bg-white rounded-b-md whitespace-nowrap"
-                    >
-                      Sign out
-                    </button> */}
                   </div>
                 ) : (
                   ""
                 )}
               </div>
             </>
-          )}
+          )} */}
+          <a href="/subjectInfo">
+            <button className="flex gap-2 items-center w-full px-[21px] py-[14px] rounded-2xl bg-blue-600 text-white hover:bg-white hover:text-black">
+              <span>Get Started</span>
+              <AiOutlineLogin width={20} height={20} />
+            </button>
+          </a>
         </div>
       </ul>
     </div>
