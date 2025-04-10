@@ -2,8 +2,8 @@ import React from "react";
 import jsPDF from "jspdf";
 import html2pdf from "html2pdf.js";
 import { Link } from "react-router-dom";
-import { auth } from "../lib/firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+// import { auth } from "../lib/firebase";
+// import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 const UserQuestions = [
@@ -243,7 +243,7 @@ const question = () => {
   };
 
   const navigate = useNavigate();
-  const auth = getAuth();
+  // const auth = getAuth();
   // onAuthStateChanged(auth, (user) => {
   //   if (!user) {
   //     navigate("/login");

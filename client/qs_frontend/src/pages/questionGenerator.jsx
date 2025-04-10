@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ISEQuesPaper from "../components/ISEQuesPaper";
 import ESEQuesPaper from "../components/ESEQuesPaper";
-import { auth } from "../lib/firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+// import { auth } from "../lib/firebase";
+// import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
@@ -91,7 +91,7 @@ function questionGenerator() {
   }, [subjectsInDB]);
 
   const navigate = useNavigate();
-  const auth = getAuth();
+  // const auth = getAuth();
   // onAuthStateChanged(auth, (user) => {
   //   if (!user) {
   //     navigate("/login");

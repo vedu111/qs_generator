@@ -1,5 +1,5 @@
 import React from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+// import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { AiFillDelete } from "react-icons/ai";
 import { Loader2 } from "lucide-react";
@@ -8,7 +8,7 @@ export default function flush() {
   const [user, setUser] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
-  const auth = getAuth();
+  // const auth = getAuth();
   // onAuthStateChanged(auth, (user) => {
   //   if (!user) {
   //     setUser(null);
