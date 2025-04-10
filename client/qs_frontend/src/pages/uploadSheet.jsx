@@ -1,18 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-// import { auth } from "../lib/firebase";
-// import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
 const UploadSheet = () => {
   const navigate = useNavigate();
-  // const auth = getAuth();
-  // onAuthStateChanged(auth, (user) => {
-  //   if (!user) {
-  //     navigate("/login");
-  //   }
-  // });
   const [preview, setPreview] = useState(false);
   const handlePreviewButton = () => {
     setPreview(!preview);

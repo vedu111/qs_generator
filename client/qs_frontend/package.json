@@ -13,7 +13,6 @@
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "buffer": "^6.0.3",
-    "firebase": "^10.11.1",
     "framer-motion": "^11.1.7",
     "html-pdf": "^3.0.1",
     "html2canvas": "^1.4.1",

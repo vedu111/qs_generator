@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-// import { auth } from "../lib/firebase";
-// import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 const teacherForm = () => {
@@ -21,12 +19,6 @@ const teacherForm = () => {
   };
 
   const navigate = useNavigate();
-  // const auth = getAuth();
-  // onAuthStateChanged(auth, (user) => {
-  //   if (!user) {
-  //     navigate("/login");
-  //   }
-  // });
 
   // Handle form submission
   const handleSubmit = (e) => {

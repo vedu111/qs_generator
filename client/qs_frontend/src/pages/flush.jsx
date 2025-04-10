@@ -1,35 +1,18 @@
 import React from "react";
-// import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
 import { AiFillDelete } from "react-icons/ai";
 import { Loader2 } from "lucide-react";
 
 export default function flush() {
-  const [user, setUser] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
-  const navigate = useNavigate();
-  // const auth = getAuth();
-  // onAuthStateChanged(auth, (user) => {
-  //   if (!user) {
-  //     setUser(null);
-  //     navigate("/login");
-  //   } else {
-  //     setUser(user);
-  //   }
-  // });
-  // if (
-  //   user?.email !== "1032220215@tcetmumbai.in" &&
-  //   user?.email !== "loukik.salvi@tcetmumbai.in"
-  // ) {
-  //   navigate("/");
-  // }
   const flushDB = async () => {
     setLoading(true);
-    // alert("Are you sure you want to flush the database?");
-    // if (!window.confirm("Are you sure you want to flush the database?")) {
-    //   setLoading(false);
-    //   return;
-    // }
+    const confirmFlush = window.confirm(
+      "Are you sure you want to flush the database?"
+    );
+    if (!confirmFlush) {
+      setLoading(false);
+      return;
+    }
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}flush`, {
       method: "DELETE",
     });
