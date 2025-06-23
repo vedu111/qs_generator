@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  mongo:
+    image: mongo
+    container_name: qsgen_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build: ./server
+    container_name: qsgen_backend
+    ports:
+      - "5000:5000"  # ensure backend listens on 5000
+    depends_on:
+      - mongo
+
+  frontend:
+    build:
+      context: ./client/qs_frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_BACKEND_URL: http://localhost:5000
+    container_name: qsgen_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:

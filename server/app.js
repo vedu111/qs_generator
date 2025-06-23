@@ -12,9 +12,13 @@ const listCollectionsRoute = require('./routes/listCollections');
 const cors = require('cors');
 const app = express();
 
-require('dotenv').config();
+// Hardcoded MongoDB URI (points at the Docker Compose “mongo” service)
+const MONGO_URI = 'mongodb://mongo:27017/qsGen';
 
-mongoose.connect(process.env.MONGO_DB_URI, { useNewUrlParser: true, useUnifiedTopology: true }); // 'mongodb://localhost:27017/qsGen'
+mongoose.connect(MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 const db = mongoose.connection;
 
 db.on('error', (err) => {
@@ -22,14 +26,14 @@ db.on('error', (err) => {
 });
 
 db.once('open', () => {
-  console.log('Connected to MongoDB database');
+  console.log('Connected to MongoDB database at', MONGO_URI);
 });
 
 app.use(cors());
-
 app.use(express.json());
 app.set('view engine', 'ejs');
 
+// Your routes…
 app.use('/', uploadRoute);
 app.use('/', subInfoRouter);
 app.use('/', questionsWithImagesRouter);
@@ -40,6 +44,4 @@ app.use('/', listCollectionsRoute);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.listen(3000, () => {
-    console.log('Server listening on port 3000');
-});
+app.listen(5000, () => console.log("Server running on port 5000"));
